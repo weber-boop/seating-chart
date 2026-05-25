@@ -1,0 +1,2791 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>親職方案座位圖工具</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;500;600;700&family=Noto+Sans+TC:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+:root {
+  --paper: #f5f1e8;
+  --paper-shade: #ebe4d3;
+  --ink: #2b2419;
+  --ink-soft: #5a4f3f;
+  --ink-faint: #8a7d68;
+  --accent: #8b3a2e;
+  --accent-soft: #c9a690;
+  --rule: #d9cfb8;
+  --female: #c4577a;
+  --female-bg: #f5e3ea;
+  --female-border: #a8456a;
+  --male: #3d6b96;
+  --male-bg: #e1eaf4;
+  --male-border: #2d5a85;
+  --unknown: #8a7d68;
+  --unknown-bg: #ece6d6;
+  --unknown-border: #6e6553;
+  --present: #5a8a4a;
+  --late: #d4a04a;
+  --absent: #b85540;
+  --special: #d4a04a;
+  --align: #c8412e;
+  --equal: #2d8a8a;
+  --swap: #6b4e9e;
+  --selected: #2d6ba8;
+  --shadow: 0 1px 2px rgba(43, 36, 25, 0.08), 0 4px 12px rgba(43, 36, 25, 0.06);
+  --shadow-lift: 0 4px 8px rgba(43, 36, 25, 0.12), 0 12px 24px rgba(43, 36, 25, 0.1);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  height: 100%;
+  font-family: 'Noto Sans TC', sans-serif;
+  background: var(--paper);
+  color: var(--ink);
+  font-size: 14px;
+  line-height: 1.6;
+  overflow: hidden;
+}
+
+body {
+  background-image:
+    radial-gradient(circle at 20% 30%, rgba(139, 58, 46, 0.03) 0%, transparent 50%),
+    radial-gradient(circle at 80% 70%, rgba(74, 107, 138, 0.03) 0%, transparent 50%);
+}
+
+.app { display: grid; grid-template-rows: auto 1fr; height: 100vh; }
+
+.header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 24px; background: var(--paper);
+  border-bottom: 1px solid var(--rule);
+  position: relative; z-index: 10; gap: 16px;
+}
+
+.brand { display: flex; align-items: baseline; gap: 12px; flex-shrink: 0; }
+
+.brand-title {
+  font-family: 'Noto Serif TC', serif;
+  font-size: 20px; font-weight: 600;
+  letter-spacing: 0.02em; color: var(--ink);
+}
+
+.brand-sub {
+  font-size: 12px; color: var(--ink-faint);
+  letter-spacing: 0.1em;
+  font-family: 'JetBrains Mono', monospace;
+  text-transform: uppercase;
+}
+
+.brand-bar { width: 32px; height: 2px; background: var(--accent); margin: 0 4px; }
+
+.session-meta { display: flex; gap: 12px; align-items: center; flex: 1; justify-content: center; }
+
+.session-meta input {
+  border: none; border-bottom: 1px dashed var(--rule);
+  background: transparent; padding: 4px 8px;
+  font-family: inherit; font-size: 13px; color: var(--ink);
+  outline: none; transition: border-color 0.2s; min-width: 100px;
+}
+
+.session-meta input:focus { border-bottom-color: var(--accent); }
+.session-meta input::placeholder { color: var(--ink-faint); }
+
+.header-actions { display: flex; gap: 8px; flex-shrink: 0; }
+
+.main { display: grid; grid-template-columns: 280px 1fr 280px; overflow: hidden; height: 100%; }
+
+.panel { background: var(--paper); overflow-y: auto; display: flex; flex-direction: column; }
+.panel-left { border-right: 1px solid var(--rule); }
+.panel-right { border-left: 1px solid var(--rule); }
+
+.panel-section { padding: 18px 20px; border-bottom: 1px solid var(--rule); }
+.panel-section:last-child { border-bottom: none; }
+
+.section-title {
+  font-family: 'Noto Serif TC', serif;
+  font-size: 13px; font-weight: 600; color: var(--ink);
+  margin-bottom: 12px;
+  display: flex; align-items: center; gap: 8px;
+}
+
+.section-title::before {
+  content: ''; width: 3px; height: 14px;
+  background: var(--accent); display: inline-block;
+}
+
+.section-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; color: var(--ink-faint); margin-left: auto;
+}
+
+.btn {
+  border: 1px solid var(--rule); background: var(--paper);
+  padding: 8px 14px; font-family: inherit; font-size: 13px;
+  color: var(--ink); cursor: pointer; transition: all 0.18s ease;
+  display: inline-flex; align-items: center; gap: 6px; border-radius: 2px;
+}
+
+.btn:hover { background: var(--paper-shade); border-color: var(--ink-faint); }
+
+.btn-primary { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.btn-primary:hover { background: var(--accent); border-color: var(--accent); color: var(--paper); }
+
+.btn-block { width: 100%; justify-content: center; }
+.btn-sm { padding: 4px 8px; font-size: 12px; }
+.btn-row { display: flex; gap: 6px; flex-wrap: wrap; }
+
+.tabs { display: flex; border-bottom: 1px solid var(--rule); margin-bottom: 12px; }
+
+.tab {
+  flex: 1; padding: 8px; font-size: 12px;
+  background: transparent; border: none;
+  color: var(--ink-faint); cursor: pointer;
+  border-bottom: 2px solid transparent; transition: all 0.15s;
+}
+
+.tab.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 500; }
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+.layout-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+.layout-card {
+  border: 1px solid var(--rule); background: var(--paper);
+  padding: 10px 8px; cursor: pointer; text-align: center;
+  transition: all 0.18s; border-radius: 2px;
+}
+
+.layout-card:hover { border-color: var(--ink-faint); background: var(--paper-shade); }
+.layout-card.active { border-color: var(--accent); background: rgba(139, 58, 46, 0.06); }
+
+.layout-icon { display: block; margin: 0 auto 6px; color: var(--ink-soft); }
+.layout-card.active .layout-icon { color: var(--accent); }
+.layout-name { font-size: 11px; font-weight: 500; color: var(--ink); }
+
+.dir-toggle {
+  display: flex; border: 1px solid var(--rule);
+  border-radius: 2px; overflow: hidden; margin-bottom: 12px;
+}
+
+.dir-toggle button {
+  flex: 1; padding: 8px; background: var(--paper);
+  border: none; font-family: inherit; font-size: 12px;
+  color: var(--ink-soft); cursor: pointer; transition: all 0.15s;
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+}
+
+.dir-toggle button + button { border-left: 1px solid var(--rule); }
+.dir-toggle button.active { background: var(--ink); color: var(--paper); }
+
+.unit-list { margin-top: 12px; }
+
+.unit-item {
+  display: flex; align-items: center; gap: 6px;
+  padding: 6px 8px; background: var(--paper-shade);
+  border: 1px solid var(--rule); border-radius: 2px; margin-bottom: 4px;
+}
+
+.unit-label { font-size: 12px; color: var(--ink-soft); flex-shrink: 0; min-width: 38px; font-weight: 500; }
+.unit-count { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--ink); flex: 1; text-align: center; }
+
+.unit-btn {
+  width: 22px; height: 22px;
+  border: 1px solid var(--rule); background: var(--paper);
+  color: var(--ink-soft); cursor: pointer; border-radius: 2px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; line-height: 1; padding: 0; transition: all 0.15s;
+}
+
+.unit-btn:hover { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.unit-btn.danger:hover { background: var(--accent); border-color: var(--accent); }
+
+.unit-add-row { display: flex; gap: 6px; margin-top: 8px; }
+.unit-add-row .btn { flex: 1; }
+
+.toggle-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.toggle-row label { font-size: 12px; color: var(--ink-soft); cursor: pointer; }
+
+.toggle {
+  position: relative; width: 34px; height: 18px;
+  background: var(--rule); border-radius: 9px;
+  cursor: pointer; transition: background 0.2s; flex-shrink: 0;
+}
+
+.toggle::after {
+  content: ''; position: absolute; top: 2px; left: 2px;
+  width: 14px; height: 14px; background: var(--paper);
+  border-radius: 50%; transition: transform 0.2s;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
+
+.toggle.on { background: var(--accent); }
+.toggle.on::after { transform: translateX(16px); }
+
+.roster-add { display: flex; gap: 6px; margin-bottom: 8px; }
+
+.roster-add input {
+  flex: 1; padding: 6px 10px;
+  border: 1px solid var(--rule); background: var(--paper);
+  font-family: inherit; font-size: 13px; border-radius: 2px;
+}
+
+.roster-add input:focus { outline: none; border-color: var(--accent); }
+
+.bulk-area {
+  width: 100%; min-height: 90px; padding: 8px 10px;
+  border: 1px solid var(--rule); background: var(--paper);
+  font-family: inherit; font-size: 13px;
+  border-radius: 2px; resize: vertical; margin-bottom: 8px;
+}
+
+.bulk-area:focus { outline: none; border-color: var(--accent); }
+
+.gender-picker { display: flex; gap: 4px; margin-bottom: 12px; }
+
+.gender-btn {
+  flex: 1; padding: 5px; font-size: 11px;
+  border: 1px solid var(--rule); background: var(--paper);
+  cursor: pointer; color: var(--ink-soft);
+  border-radius: 2px; transition: all 0.18s;
+}
+
+.gender-btn.active { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+
+.roster-list { list-style: none; max-height: 260px; overflow-y: auto; }
+
+.roster-item {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 10px; border: 1px solid var(--rule);
+  margin-bottom: 4px; border-radius: 2px;
+  cursor: grab; background: var(--paper);
+  transition: all 0.15s; user-select: none;
+}
+
+.roster-item:hover { background: var(--paper-shade); border-color: var(--ink-faint); }
+.roster-item.placed { opacity: 0.5; background: var(--paper-shade); }
+.roster-item.dragging { opacity: 0.4; cursor: grabbing; }
+
+.gender-badge {
+  width: 20px; height: 20px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 700; color: white;
+  cursor: pointer; transition: transform 0.12s;
+  border: 2px solid transparent;
+}
+
+.gender-badge:hover { transform: scale(1.15); border-color: var(--ink-faint); }
+.gender-badge.f { background: var(--female); }
+.gender-badge.m { background: var(--male); }
+.gender-badge.u { background: var(--unknown); }
+
+.roster-name {
+  flex: 1; font-size: 13px; color: var(--ink);
+  cursor: text; padding: 2px 4px;
+  border-radius: 2px; transition: background 0.15s;
+}
+
+.roster-name:hover { background: var(--paper-shade); }
+
+.roster-remove {
+  border: none; background: transparent;
+  color: var(--ink-faint); cursor: pointer;
+  padding: 2px 4px; font-size: 14px; line-height: 1;
+}
+
+.roster-remove:hover { color: var(--accent); }
+
+.roster-empty {
+  text-align: center; padding: 20px 10px;
+  color: var(--ink-faint); font-size: 12px; font-style: italic;
+}
+
+.stage-wrap {
+  position: relative; overflow: auto;
+  background:
+    linear-gradient(var(--paper-shade) 1px, transparent 1px) 0 0 / 24px 24px,
+    linear-gradient(90deg, var(--paper-shade) 1px, transparent 1px) 0 0 / 24px 24px,
+    var(--paper);
+}
+
+.stage {
+  position: relative; width: 1200px; height: 800px;
+  margin: 20px auto; background: var(--paper);
+  border: 1px solid var(--rule); box-shadow: var(--shadow);
+}
+
+.stage-header {
+  position: absolute; top: 0; left: 0; right: 0;
+  padding: 16px 24px; border-bottom: 1px dashed var(--rule);
+  display: flex; justify-content: space-between; align-items: center;
+  background: var(--paper); font-family: 'Noto Serif TC', serif;
+}
+
+.stage-title { font-size: 16px; font-weight: 600; color: var(--ink); }
+
+.stage-meta {
+  font-size: 12px; color: var(--ink-faint);
+  font-family: 'JetBrains Mono', monospace; letter-spacing: 0.05em;
+}
+
+.podium {
+  position: absolute; top: 70px; left: 50%;
+  transform: translateX(-50%);
+  width: 200px; height: 36px;
+  background: var(--ink); color: var(--paper);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Noto Serif TC', serif;
+  font-size: 13px; letter-spacing: 0.3em;
+  border-radius: 2px; z-index: 2;
+}
+
+.podium::before, .podium::after {
+  content: ''; position: absolute; top: 50%;
+  width: 60px; height: 1px; background: var(--ink);
+}
+
+.podium::before { left: -70px; }
+.podium::after { right: -70px; }
+
+.podium-axis {
+  position: absolute; top: 70px; bottom: 24px;
+  left: 50%; width: 0;
+  border-left: 1px dashed rgba(139, 58, 46, 0.12);
+  pointer-events: none; z-index: 0;
+}
+
+.layout-area {
+  position: absolute; top: 130px;
+  left: 24px; right: 24px; bottom: 24px;
+}
+
+.layout-area.show-grid {
+  background-image: radial-gradient(circle, var(--rule) 0.8px, transparent 1px);
+  background-size: 12px 12px; background-position: 0 0;
+}
+
+/* Selection box（框選） */
+.selection-box {
+  position: absolute;
+  border: 1.5px dashed var(--selected);
+  background: rgba(45, 107, 168, 0.08);
+  pointer-events: none;
+  z-index: 40;
+  display: none;
+}
+
+.selection-box.show { display: block; }
+
+.align-guide {
+  position: absolute; background: var(--align);
+  pointer-events: none; z-index: 50;
+  opacity: 0; transition: opacity 0.08s;
+}
+
+.align-guide.show { opacity: 0.85; }
+.align-guide.vertical {
+  width: 1px;
+  background-image: linear-gradient(to bottom, var(--align) 50%, transparent 50%);
+  background-size: 1px 6px;
+}
+.align-guide.horizontal {
+  height: 1px;
+  background-image: linear-gradient(to right, var(--align) 50%, transparent 50%);
+  background-size: 6px 1px;
+}
+
+.spacing-indicator { position: absolute; pointer-events: none; z-index: 51; opacity: 0; transition: opacity 0.1s; }
+.spacing-indicator.show { opacity: 1; }
+.spacing-indicator .line { position: absolute; background: var(--equal); }
+.spacing-indicator .cap { position: absolute; background: var(--equal); }
+
+.spacing-label {
+  position: absolute; background: var(--equal); color: white;
+  font-family: 'JetBrains Mono', monospace; font-size: 10px;
+  padding: 1px 5px; border-radius: 2px;
+  white-space: nowrap; transform: translate(-50%, -50%);
+}
+
+.seat {
+  position: absolute; width: 78px; height: 84px;
+  border: 1.5px solid var(--rule); background: var(--paper);
+  border-radius: 4px; display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 4px; cursor: pointer;
+  transition: border-color 0.18s, box-shadow 0.18s, opacity 0.18s;
+  user-select: none;
+}
+
+.seat.draggable-mode { cursor: move; }
+.seat:hover { border-color: var(--ink-faint); box-shadow: var(--shadow); z-index: 5; }
+
+.seat.dragging {
+  z-index: 100; box-shadow: var(--shadow-lift);
+  transition: none; cursor: grabbing; opacity: 0.92;
+}
+
+.seat.drop-target {
+  background: rgba(139, 58, 46, 0.08);
+  border-color: var(--accent); border-style: dashed;
+}
+
+.seat.swap-target {
+  background: rgba(107, 78, 158, 0.14);
+  border-color: var(--swap);
+  border-style: dashed;
+  border-width: 2.5px !important;
+  box-shadow: 0 0 0 2px rgba(107, 78, 158, 0.18);
+}
+
+.seat.multi-selected {
+  box-shadow: 0 0 0 2px var(--selected), var(--shadow);
+}
+
+.seat.occupied { border-color: var(--ink-soft); }
+.seat.occupied.f { background: var(--female-bg); border-color: var(--female-border); border-width: 2px; }
+.seat.occupied.m { background: var(--male-bg); border-color: var(--male-border); border-width: 2px; }
+.seat.occupied.u { background: var(--unknown-bg); border-color: var(--unknown-border); border-width: 2px; }
+
+.seat.absent { opacity: 0.5; }
+.seat.absent .seat-name { text-decoration: line-through; }
+.seat.late { border-style: dashed; }
+
+.seat-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px; color: var(--ink-faint);
+  position: absolute; top: 4px; left: 6px;
+  letter-spacing: 0.05em;
+}
+
+.seat-gender-icon {
+  position: absolute; top: 4px; left: 50%;
+  transform: translateX(-50%);
+  width: 20px; height: 20px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 700; color: white; line-height: 1;
+  cursor: pointer;
+  transition: transform 0.12s, box-shadow 0.12s;
+  border: 2px solid transparent;
+}
+
+.seat-gender-icon:hover {
+  transform: translateX(-50%) scale(1.18);
+  border-color: white;
+  box-shadow: 0 0 0 2px var(--ink-soft), var(--shadow);
+}
+
+.seat-gender-icon.f { background: var(--female); }
+.seat-gender-icon.m { background: var(--male); }
+.seat-gender-icon.u { background: var(--unknown); }
+
+.seat-name {
+  font-size: 13px; font-weight: 600; color: var(--ink);
+  text-align: center; line-height: 1.2;
+  margin-top: 22px; word-break: keep-all;
+  max-width: 100%; overflow: hidden;
+}
+
+.seat-empty-label { font-size: 11px; color: var(--ink-faint); font-style: italic; }
+
+.seat-status {
+  position: absolute; bottom: 4px; right: 4px;
+  font-size: 9px; font-family: 'JetBrains Mono', monospace;
+  padding: 1px 4px; border-radius: 2px;
+  background: var(--paper-shade); color: var(--ink-soft);
+  letter-spacing: 0.05em;
+}
+
+.seat-status.present { background: rgba(90, 138, 74, 0.18); color: var(--present); }
+.seat-status.late { background: rgba(212, 160, 74, 0.22); color: #8a6420; }
+.seat-status.absent { background: rgba(184, 85, 64, 0.18); color: var(--absent); }
+
+.seat-special {
+  position: absolute; bottom: 4px; left: 4px;
+  width: 14px; height: 14px; border-radius: 50%;
+  background: var(--special); color: white;
+  font-size: 9px; display: flex;
+  align-items: center; justify-content: center; font-weight: 600;
+}
+
+.seat-quick-del {
+  position: absolute; top: -8px; right: -8px;
+  width: 20px; height: 20px; border-radius: 50%;
+  background: var(--accent); color: white;
+  font-size: 12px; line-height: 20px; text-align: center;
+  cursor: pointer; opacity: 0; transition: opacity 0.15s;
+  z-index: 10; border: 2px solid var(--paper);
+  box-shadow: var(--shadow); font-weight: 600;
+}
+
+.seat:hover .seat-quick-del { opacity: 1; }
+.seat-quick-del:hover { background: #6b2a23; }
+
+.round-table {
+  position: absolute; border-radius: 50%;
+  background: var(--paper-shade); border: 2px solid var(--rule);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Noto Serif TC', serif;
+  color: var(--ink-soft); font-size: 14px;
+  font-weight: 500; pointer-events: none;
+}
+
+.modal-backdrop {
+  position: fixed; inset: 0;
+  background: rgba(43, 36, 25, 0.4); backdrop-filter: blur(2px);
+  display: none; align-items: center; justify-content: center; z-index: 100;
+}
+
+.modal-backdrop.show { display: flex; }
+
+.modal {
+  background: var(--paper); border: 1px solid var(--rule);
+  width: 420px; max-width: 92vw;
+  box-shadow: var(--shadow-lift); border-radius: 4px; overflow: hidden;
+}
+
+.modal-header { padding: 18px 22px 14px; border-bottom: 1px solid var(--rule); }
+
+.modal-title {
+  font-family: 'Noto Serif TC', serif;
+  font-size: 16px; font-weight: 600; color: var(--ink); margin-bottom: 4px;
+}
+
+.modal-sub { font-size: 12px; color: var(--ink-faint); font-family: 'JetBrains Mono', monospace; }
+
+.modal-body { padding: 18px 22px; }
+
+.field { margin-bottom: 16px; }
+
+.field-label { display: block; font-size: 12px; color: var(--ink-soft); margin-bottom: 6px; font-weight: 500; }
+
+.field input, .field textarea, .field select {
+  width: 100%; padding: 8px 10px;
+  border: 1px solid var(--rule); background: var(--paper);
+  font-family: inherit; font-size: 13px; color: var(--ink); border-radius: 2px;
+}
+
+.field input:focus, .field textarea:focus, .field select:focus { outline: none; border-color: var(--accent); }
+.field textarea { resize: vertical; min-height: 60px; }
+
+.assign-divider { text-align: center; font-size: 11px; color: var(--ink-faint); margin: 8px 0; position: relative; }
+
+.assign-divider::before, .assign-divider::after {
+  content: ''; position: absolute; top: 50%;
+  width: calc(50% - 20px); height: 1px; background: var(--rule);
+}
+
+.assign-divider::before { left: 0; }
+.assign-divider::after { right: 0; }
+
+.quick-add-row { display: flex; gap: 6px; align-items: center; }
+.quick-add-row input { flex: 1; }
+
+.quick-gender { display: flex; gap: 2px; }
+
+.quick-gender button {
+  border: 1px solid var(--rule); background: var(--paper);
+  padding: 6px 8px; font-size: 11px; cursor: pointer;
+  border-radius: 2px; color: var(--ink-soft);
+}
+
+.quick-gender button.active { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+
+.radio-group { display: flex; gap: 6px; flex-wrap: wrap; }
+
+.radio-pill {
+  flex: 1; min-width: 60px;
+  border: 1px solid var(--rule); background: var(--paper);
+  padding: 8px; text-align: center; font-size: 12px;
+  cursor: pointer; border-radius: 2px; transition: all 0.18s;
+}
+
+.radio-pill.active { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.radio-pill[data-status="present"].active { background: var(--present); border-color: var(--present); }
+.radio-pill[data-status="late"].active { background: var(--late); border-color: var(--late); }
+.radio-pill[data-status="absent"].active { background: var(--absent); border-color: var(--absent); }
+.radio-pill[data-gender="f"].active { background: var(--female); border-color: var(--female); }
+.radio-pill[data-gender="m"].active { background: var(--male); border-color: var(--male); }
+.radio-pill[data-gender="u"].active { background: var(--unknown); border-color: var(--unknown); }
+
+.modal-footer {
+  display: flex; justify-content: space-between;
+  padding: 14px 22px; background: var(--paper-shade);
+  border-top: 1px solid var(--rule);
+}
+
+.modal-footer-right { display: flex; gap: 8px; }
+
+.legend-item { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; font-size: 12px; color: var(--ink-soft); }
+.legend-swatch { width: 16px; height: 16px; border-radius: 2px; flex-shrink: 0; }
+
+.legend-gender {
+  width: 18px; height: 18px; border-radius: 50%;
+  flex-shrink: 0; display: flex;
+  align-items: center; justify-content: center;
+  color: white; font-size: 11px; font-weight: 700;
+}
+
+.stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.stat { padding: 10px; background: var(--paper-shade); border-radius: 2px; text-align: center; }
+.stat-num { font-family: 'Noto Serif TC', serif; font-size: 22px; font-weight: 600; color: var(--ink); line-height: 1; }
+
+.stat-label {
+  font-size: 10px; color: var(--ink-faint);
+  text-transform: uppercase; letter-spacing: 0.1em; margin-top: 4px;
+}
+
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--rule); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--ink-faint); }
+
+.help-text {
+  font-size: 11px; color: var(--ink-faint);
+  margin-top: 6px; line-height: 1.5; font-style: italic;
+}
+
+/* Multi-select toolbar */
+.multi-toolbar {
+  position: fixed;
+  top: 80px; left: 50%;
+  transform: translateX(-50%);
+  background: var(--ink);
+  color: var(--paper);
+  border-radius: 4px;
+  padding: 8px 14px;
+  display: none;
+  align-items: center;
+  gap: 12px;
+  z-index: 150;
+  box-shadow: var(--shadow-lift);
+  font-size: 13px;
+}
+
+.multi-toolbar.show { display: flex; }
+
+.multi-toolbar-count {
+  background: rgba(255,255,255,0.15);
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+}
+
+.multi-toolbar button {
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.3);
+  color: var(--paper);
+  padding: 4px 10px;
+  font-size: 12px;
+  border-radius: 2px;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.multi-toolbar button:hover { background: rgba(255,255,255,0.12); }
+.multi-toolbar button.danger { color: #ffb3a8; border-color: rgba(255,179,168,0.4); }
+.multi-toolbar button.danger:hover { background: rgba(255,100,80,0.18); }
+
+.toast {
+  position: fixed; bottom: 24px; left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: var(--ink); color: var(--paper);
+  padding: 10px 18px; border-radius: 2px;
+  font-size: 13px; box-shadow: var(--shadow-lift);
+  opacity: 0; transition: all 0.25s ease;
+  z-index: 200; pointer-events: none;
+}
+
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+.exporting .align-guide,
+.exporting .spacing-indicator,
+.exporting .selection-box,
+.exporting .multi-toolbar,
+.exporting .podium-axis { display: none !important; }
+.exporting .layout-area.show-grid { background-image: none !important; }
+.exporting .seat:hover { box-shadow: none; }
+.exporting .seat-quick-del { display: none !important; }
+.exporting .seat.multi-selected { box-shadow: none; }
+.exporting .seat-gender-icon:hover { transform: translateX(-50%); border-color: transparent; box-shadow: none; }
+</style>
+</head>
+<body>
+
+<div class="app">
+  <header class="header">
+    <div class="brand">
+      <span class="brand-title">座位圖</span>
+      <span class="brand-bar"></span>
+      <span class="brand-sub">Seating · Plan</span>
+    </div>
+    <div class="session-meta">
+      <input type="text" id="sessionTitle" placeholder="課程／講座名稱" value="">
+      <input type="date" id="sessionDate">
+      <input type="text" id="sessionLocation" placeholder="地點" value="">
+    </div>
+    <div class="header-actions">
+      <button class="btn" onclick="exportPNG()">匯出 PNG</button>
+      <button class="btn btn-primary" onclick="exportPDF()">匯出 PDF</button>
+    </div>
+  </header>
+
+  <main class="main">
+    <aside class="panel panel-left">
+      <div class="panel-section">
+        <h3 class="section-title">場地配置<span class="section-num">01</span></h3>
+        <div class="layout-grid">
+          <div class="layout-card active" data-layout="lecture" onclick="setLayout('lecture')">
+            <svg class="layout-icon" width="32" height="24" viewBox="0 0 32 24" fill="none" stroke="currentColor" stroke-width="1.4">
+              <rect x="12" y="2" width="8" height="3"/>
+              <rect x="3" y="9" width="4" height="4"/><rect x="9" y="9" width="4" height="4"/>
+              <rect x="15" y="9" width="4" height="4"/><rect x="21" y="9" width="4" height="4"/>
+              <rect x="3" y="16" width="4" height="4"/><rect x="9" y="16" width="4" height="4"/>
+              <rect x="15" y="16" width="4" height="4"/><rect x="21" y="16" width="4" height="4"/>
+            </svg>
+            <div class="layout-name">講座式</div>
+          </div>
+          <div class="layout-card" data-layout="group" onclick="setLayout('group')">
+            <svg class="layout-icon" width="32" height="24" viewBox="0 0 32 24" fill="none" stroke="currentColor" stroke-width="1.4">
+              <circle cx="9" cy="9" r="3"/><circle cx="22" cy="9" r="3"/>
+              <circle cx="9" cy="18" r="3"/><circle cx="22" cy="18" r="3"/>
+            </svg>
+            <div class="layout-name">團體圓桌</div>
+          </div>
+          <div class="layout-card" data-layout="ushape" onclick="setLayout('ushape')">
+            <svg class="layout-icon" width="32" height="24" viewBox="0 0 32 24" fill="none" stroke="currentColor" stroke-width="1.4">
+              <path d="M4 4 L4 20 L28 20 L28 4"/>
+              <rect x="2" y="5" width="3" height="2"/><rect x="2" y="10" width="3" height="2"/><rect x="2" y="15" width="3" height="2"/>
+              <rect x="27" y="5" width="3" height="2"/><rect x="27" y="10" width="3" height="2"/><rect x="27" y="15" width="3" height="2"/>
+              <rect x="10" y="21" width="3" height="2"/><rect x="15" y="21" width="3" height="2"/><rect x="20" y="21" width="3" height="2"/>
+            </svg>
+            <div class="layout-name">U／ㄇ 字型</div>
+          </div>
+          <div class="layout-card" data-layout="free" onclick="setLayout('free')">
+            <svg class="layout-icon" width="32" height="24" viewBox="0 0 32 24" fill="none" stroke="currentColor" stroke-width="1.4">
+              <rect x="3" y="4" width="4" height="4" transform="rotate(-8 5 6)"/>
+              <rect x="14" y="3" width="4" height="4" transform="rotate(5 16 5)"/>
+              <rect x="22" y="6" width="4" height="4"/>
+              <rect x="6" y="14" width="4" height="4" transform="rotate(10 8 16)"/>
+              <rect x="18" y="15" width="4" height="4" transform="rotate(-6 20 17)"/>
+            </svg>
+            <div class="layout-name">自由配置</div>
+          </div>
+        </div>
+
+        <div id="layoutConfig" style="margin-top:16px;"></div>
+      </div>
+
+      <div class="panel-section">
+        <h3 class="section-title">學員名單<span class="section-num">02</span></h3>
+
+        <div class="tabs">
+          <button class="tab active" data-tab="single" onclick="switchRosterTab('single')">逐筆新增</button>
+          <button class="tab" data-tab="bulk" onclick="switchRosterTab('bulk')">批量輸入</button>
+        </div>
+
+        <div class="tab-content active" id="tab-single">
+          <div class="roster-add">
+            <input type="text" id="newName" placeholder="輸入姓名" onkeydown="if(event.key==='Enter')addStudent()">
+            <button class="btn btn-primary" onclick="addStudent()">＋</button>
+          </div>
+          <div class="gender-picker" id="genderPicker">
+            <button class="gender-btn active" data-gender="f">女</button>
+            <button class="gender-btn" data-gender="m">男</button>
+            <button class="gender-btn" data-gender="u">未指定</button>
+          </div>
+        </div>
+
+        <div class="tab-content" id="tab-bulk">
+          <textarea class="bulk-area" id="bulkInput"
+            placeholder="一行一個姓名，例如：&#10;王小明&#10;李美麗&#10;陳大華"></textarea>
+          <div class="gender-picker">
+            <button class="gender-btn active" data-bulk-gender="f">全標女</button>
+            <button class="gender-btn" data-bulk-gender="m">全標男</button>
+            <button class="gender-btn" data-bulk-gender="u">未指定</button>
+          </div>
+          <button class="btn btn-primary btn-block" onclick="bulkAddStudents()">批量加入名單</button>
+        </div>
+
+        <p class="help-text" style="margin-top:10px">
+          • 拖名字到座位 = 指派<br>
+          • 點性別圖示（名單或座位上）= 切換性別<br>
+          • 點姓名 = 編輯<br>
+          • 自由配置中：空白處按住拖曳 = 框選座位<br>
+          • Ctrl/Cmd + 點座位 = 加入選取
+        </p>
+        <ul class="roster-list" id="rosterList"></ul>
+      </div>
+    </aside>
+
+    <section class="stage-wrap" id="stageWrap">
+      <div class="stage" id="stage">
+        <div class="stage-header">
+          <div class="stage-title" id="stageTitle">親職方案 ・ 座位配置</div>
+          <div class="stage-meta" id="stageMeta">SEATING / PLAN</div>
+        </div>
+        <div class="podium-axis"></div>
+        <div class="podium" id="podium">講師區</div>
+        <div class="layout-area" id="layoutArea"></div>
+      </div>
+    </section>
+
+    <aside class="panel panel-right">
+      <div class="panel-section">
+        <h3 class="section-title">出席統計<span class="section-num">03</span></h3>
+        <div class="stats-grid">
+          <div class="stat"><div class="stat-num" id="statTotal">0</div><div class="stat-label">應到</div></div>
+          <div class="stat"><div class="stat-num" id="statPresent">0</div><div class="stat-label">出席</div></div>
+          <div class="stat"><div class="stat-num" id="statLate">0</div><div class="stat-label">遲到</div></div>
+          <div class="stat"><div class="stat-num" id="statAbsent">0</div><div class="stat-label">缺席</div></div>
+        </div>
+      </div>
+
+      <div class="panel-section">
+        <h3 class="section-title">座位操作說明<span class="section-num">04</span></h3>
+        <p style="font-size:12px;color:var(--ink-soft);line-height:1.7">
+          • <strong>拖曳座位</strong>：拖到另一座位 → 互換；自由配置中拖到空白 → 移動<br>
+          • <strong>框選</strong>：自由配置中，空白處拖出框框 → 多選<br>
+          • <strong>Ctrl/Cmd + 點擊</strong>：加入或移除選取<br>
+          • <strong>整組拖動</strong>：選取多個後拖動其中一個 → 整組一起移動<br>
+          • <strong>Delete 鍵</strong>：刪除已選取的座位<br>
+          • <strong>Esc 鍵</strong>：取消選取
+        </p>
+      </div>
+
+      <div class="panel-section">
+        <h3 class="section-title">自由配置選項<span class="section-num">05</span></h3>
+        <div class="toggle-row">
+          <label>網格吸附（12px）</label>
+          <div class="toggle on" id="snapToggle" onclick="toggleSnap()"></div>
+        </div>
+        <div class="toggle-row">
+          <label>對齊輔助線</label>
+          <div class="toggle on" id="guideToggle" onclick="toggleGuide()"></div>
+        </div>
+        <div class="toggle-row">
+          <label>等距間距提示</label>
+          <div class="toggle on" id="spacingToggle" onclick="toggleSpacing()"></div>
+        </div>
+        <div class="toggle-row">
+          <label>顯示網格背景</label>
+          <div class="toggle on" id="gridToggle" onclick="toggleGrid()"></div>
+        </div>
+      </div>
+
+      <div class="panel-section">
+        <h3 class="section-title">圖例說明<span class="section-num">06</span></h3>
+        <div class="legend-item"><span class="legend-gender" style="background:var(--female)">♀</span>女性學員</div>
+        <div class="legend-item"><span class="legend-gender" style="background:var(--male)">♂</span>男性學員</div>
+        <div class="legend-item"><span class="legend-gender" style="background:var(--unknown)">·</span>未指定</div>
+        <div style="height:8px"></div>
+        <div class="legend-item"><span class="legend-swatch" style="background:rgba(90,138,74,0.2);border:1px solid var(--present)"></span>已出席</div>
+        <div class="legend-item"><span class="legend-swatch" style="background:rgba(212,160,74,0.2);border:1px solid var(--late)"></span>遲到</div>
+        <div class="legend-item"><span class="legend-swatch" style="background:rgba(184,85,64,0.15);border:1px solid var(--absent)"></span>缺席</div>
+        <div style="height:8px"></div>
+        <div class="legend-item"><span class="legend-swatch" style="background:var(--special)"></span>特殊狀況註記</div>
+      </div>
+
+      <div class="panel-section">
+        <h3 class="section-title">資料管理<span class="section-num">07</span></h3>
+        <div class="btn-row">
+          <button class="btn btn-block" onclick="saveData()">儲存至瀏覽器</button>
+          <button class="btn btn-block" onclick="exportJSON()">匯出 JSON 備份</button>
+          <button class="btn btn-block" onclick="document.getElementById('importFile').click()">匯入 JSON</button>
+          <input type="file" id="importFile" accept=".json" style="display:none" onchange="importJSON(event)">
+          <button class="btn btn-block" onclick="clearAll()" style="color:var(--accent)">清除全部</button>
+        </div>
+      </div>
+    </aside>
+  </main>
+</div>
+
+<!-- Multi-select toolbar -->
+<div class="multi-toolbar" id="multiToolbar">
+  <span>已選取 <span class="multi-toolbar-count" id="multiCount">0</span> 個座位</span>
+  <button onclick="deleteSelected()" class="danger">刪除選取</button>
+  <button onclick="clearSelection()">取消選取</button>
+</div>
+
+<!-- Seat modal -->
+<div class="modal-backdrop" id="seatModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">座位資訊</div>
+      <div class="modal-sub" id="modalSeatId">SEAT · 001</div>
+    </div>
+    <div class="modal-body">
+      <div class="field">
+        <label class="field-label">指派現有學員</label>
+        <select id="modalStudent">
+          <option value="">— 空位 —</option>
+        </select>
+      </div>
+
+      <div class="assign-divider">或直接新增並指派</div>
+
+      <div class="field">
+        <div class="quick-add-row">
+          <input type="text" id="modalNewName" placeholder="輸入新學員姓名" onkeydown="if(event.key==='Enter')quickAddAndAssign()">
+          <div class="quick-gender" id="quickGender">
+            <button data-gender="f" class="active">女</button>
+            <button data-gender="m">男</button>
+            <button data-gender="u">－</button>
+          </div>
+          <button class="btn btn-primary" onclick="quickAddAndAssign()">指派</button>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="field-label">出席狀態</label>
+        <div class="radio-group" id="statusGroup">
+          <button class="radio-pill active" data-status="present">出席</button>
+          <button class="radio-pill" data-status="late">遲到</button>
+          <button class="radio-pill" data-status="absent">缺席</button>
+        </div>
+      </div>
+      <div class="field">
+        <label class="field-label">特殊狀況註記（選填）</label>
+        <textarea id="modalNote" placeholder="例如：情緒激動、需個別關心、聽力需求、行動不便等"></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="removeSeat()" style="color:var(--accent)">移除此座位</button>
+      <div class="modal-footer-right">
+        <button class="btn" onclick="closeModal()">取消</button>
+        <button class="btn btn-primary" onclick="saveSeatModal()">儲存</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Student modal -->
+<div class="modal-backdrop" id="studentModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">編輯學員</div>
+      <div class="modal-sub">STUDENT · INFO</div>
+    </div>
+    <div class="modal-body">
+      <div class="field">
+        <label class="field-label">姓名</label>
+        <input type="text" id="studentNameInput" placeholder="輸入姓名">
+      </div>
+      <div class="field">
+        <label class="field-label">性別</label>
+        <div class="radio-group" id="studentGenderGroup">
+          <button class="radio-pill" data-gender="f">♀ 女</button>
+          <button class="radio-pill" data-gender="m">♂ 男</button>
+          <button class="radio-pill" data-gender="u">· 未指定</button>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeStudentModal()">取消</button>
+      <div class="modal-footer-right">
+        <button class="btn btn-primary" onclick="saveStudentModal()">儲存</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast">已儲存</div>
+
+<script>
+// ============ Constants ============
+const SEAT_W = 78;
+const SEAT_H = 84;
+const STAGE_W = 1200;
+const STAGE_H = 800;
+const AREA_W = STAGE_W - 48;
+const AREA_H = STAGE_H - 130 - 24;
+const PODIUM_CENTER_X = (STAGE_W / 2) - 24;
+const DRAG_THRESHOLD = 4;
+
+// ============ State ============
+const state = {
+  layout: 'lecture',
+  rowCounts: [5, 5, 5, 5],
+  tableCounts: [6, 6, 6, 6],
+  uShape: { left: 4, right: 4, bottom: 5, orientation: 'u' },
+  students: [],
+  seats: [],
+  selectedGender: 'f',
+  bulkGender: 'f',
+  quickGender: 'f',
+  selectedSeatId: null,
+  selectedStudentId: null,
+  selectedSeatIds: new Set(), // 多選的座位 ID 集合
+  nextStudentId: 1,
+  nextSeatId: 1,
+  rosterTab: 'single',
+  snapEnabled: true,
+  guideEnabled: true,
+  spacingEnabled: true,
+  gridVisible: true,
+  gridSize: 12,
+  snapThreshold: 6,
+  equalThreshold: 4,
+  layoutInitialized: { lecture: false, group: false, ushape: false }
+};
+
+const GENDER_ICON = { f: '♀', m: '♂', u: '·' };
+const GENDER_ORDER = ['f', 'm', 'u'];
+
+function centerSeatsHorizontally(seats) {
+  if (seats.length === 0) return;
+  const minX = Math.min(...seats.map(s => s.x));
+  const maxX = Math.max(...seats.map(s => s.x + SEAT_W));
+  const groupCenter = (minX + maxX) / 2;
+  const dx = PODIUM_CENTER_X - groupCenter;
+  seats.forEach(s => { s.x += dx; });
+}
+
+// ============ Initial layouts ============
+function initLectureLayout() {
+  state.seats = [];
+  const maxCols = Math.max(...state.rowCounts, 1);
+  const spacingX = Math.min(110, AREA_W / (maxCols + 1));
+  const spacingY = 100;
+  state.rowCounts.forEach((cols, r) => {
+    const rowWidth = (cols - 1) * spacingX;
+    const startX = PODIUM_CENTER_X - rowWidth / 2 - SEAT_W / 2;
+    for (let c = 0; c < cols; c++) {
+      state.seats.push({
+        id: state.nextSeatId++, x: startX + c * spacingX, y: 40 + r * spacingY,
+        studentId: null, status: 'present', note: '',
+        key: `lecture-r${r}-c${c}`
+      });
+    }
+  });
+  state.layoutInitialized.lecture = true;
+}
+
+function initGroupLayout() {
+  state.seats = [];
+  state._tableLayout = [];
+  const tables = state.tableCounts.length;
+  const cols = tables <= 1 ? 1 : (tables <= 2 ? tables : Math.ceil(Math.sqrt(tables)));
+  const rows = Math.ceil(tables / cols);
+  const tableW = AREA_W / cols;
+  const tableH = AREA_H / rows;
+  const baseRadius = Math.min(tableW, tableH) * 0.30;
+  state.tableCounts.forEach((perTable, t) => {
+    const tr = Math.floor(t / cols);
+    const tc = t % cols;
+    const cx = tableW * (tc + 0.5);
+    const cy = tableH * (tr + 0.5) + 20;
+    const radius = baseRadius + Math.max(0, perTable - 6) * 4;
+    state._tableLayout.push({ cx, cy, r: radius, label: '組 ' + (t + 1), tableIndex: t });
+    for (let i = 0; i < perTable; i++) {
+      const angle = (i / perTable) * Math.PI * 2 - Math.PI / 2;
+      const sx = cx + Math.cos(angle) * (radius + 38) - SEAT_W / 2;
+      const sy = cy + Math.sin(angle) * (radius + 38) - SEAT_H / 2;
+      state.seats.push({
+        id: state.nextSeatId++, x: sx, y: sy,
+        studentId: null, status: 'present', note: '', group: t + 1,
+        key: `table-t${t}-s${i}`
+      });
+    }
+  });
+  if (state._tableLayout.length > 0 && state.seats.length > 0) {
+    const minCx = Math.min(...state._tableLayout.map(t => t.cx - t.r));
+    const maxCx = Math.max(...state._tableLayout.map(t => t.cx + t.r));
+    const groupCenter = (minCx + maxCx) / 2;
+    const dx = PODIUM_CENTER_X - groupCenter;
+    state._tableLayout.forEach(t => { t.cx += dx; });
+    state.seats.forEach(s => { s.x += dx; });
+  }
+  state.layoutInitialized.group = true;
+}
+
+// U / ㄇ 字型：底部緊貼兩側座位
+function initUShapeLayout() {
+  state.seats = [];
+  const { left, right, bottom, orientation } = state.uShape;
+  const sideMax = Math.max(left, right, 1);
+  // 縮小兩側間距，整體更緊湊
+  const sideSpacing = Math.min(95, (AREA_H - 200) / Math.max(sideMax, 1));
+  const horizontalCount = Math.max(bottom, 1);
+  const horizontalSpacing = horizontalCount > 1 ? Math.min(100, (AREA_W - 280) / (horizontalCount - 1)) : 0;
+  const horizontalWidth = (horizontalCount - 1) * horizontalSpacing;
+  const horizontalStartX = PODIUM_CENTER_X - horizontalWidth / 2 - SEAT_W / 2;
+  const leftX = horizontalStartX - 20;
+  const rightX = horizontalStartX + horizontalWidth + 20;
+  const gapToSide = 12; // 底部/頂部與兩側座位之間的垂直間距
+
+  if (orientation === 'u') {
+    // U 字：兩側座位由上往下排，底部緊貼兩側最下方
+    const sideStartY = 60;
+    for (let i = 0; i < left; i++) {
+      state.seats.push({ id: state.nextSeatId++, x: leftX, y: sideStartY + i * sideSpacing,
+        studentId: null, status: 'present', note: '', key: `u-left-${i}` });
+    }
+    for (let i = 0; i < right; i++) {
+      state.seats.push({ id: state.nextSeatId++, x: rightX, y: sideStartY + i * sideSpacing,
+        studentId: null, status: 'present', note: '', key: `u-right-${i}` });
+    }
+    // 底部位置：兩側最下方座位的下緣 + 間距
+    const sidesMaxY = Math.max(
+      left > 0 ? sideStartY + (left - 1) * sideSpacing : sideStartY,
+      right > 0 ? sideStartY + (right - 1) * sideSpacing : sideStartY
+    );
+    const bottomY = sidesMaxY + SEAT_H + gapToSide;
+    // 邊界保護：若超出範圍，往上靠
+    const adjustedBottomY = Math.min(bottomY, AREA_H - SEAT_H - 4);
+    for (let i = 0; i < bottom; i++) {
+      state.seats.push({ id: state.nextSeatId++,
+        x: horizontalStartX + i * horizontalSpacing, y: adjustedBottomY,
+        studentId: null, status: 'present', note: '', key: `u-bottom-${i}` });
+    }
+  } else {
+    // ㄇ 字：頂部接近講師，兩側從頂部下方延伸
+    const topY = 30;
+    for (let i = 0; i < bottom; i++) {
+      state.seats.push({ id: state.nextSeatId++,
+        x: horizontalStartX + i * horizontalSpacing, y: topY,
+        studentId: null, status: 'present', note: '', key: `u-bottom-${i}` });
+    }
+    const sideStartY = topY + SEAT_H + gapToSide;
+    for (let i = 0; i < left; i++) {
+      state.seats.push({ id: state.nextSeatId++, x: leftX, y: sideStartY + i * sideSpacing,
+        studentId: null, status: 'present', note: '', key: `u-left-${i}` });
+    }
+    for (let i = 0; i < right; i++) {
+      state.seats.push({ id: state.nextSeatId++, x: rightX, y: sideStartY + i * sideSpacing,
+        studentId: null, status: 'present', note: '', key: `u-right-${i}` });
+    }
+  }
+  centerSeatsHorizontally(state.seats);
+  state.layoutInitialized.ushape = true;
+}
+
+function initCurrentLayout() {
+  if (state.layout === 'lecture') initLectureLayout();
+  else if (state.layout === 'group') initGroupLayout();
+  else if (state.layout === 'ushape') initUShapeLayout();
+}
+
+// ============ Lecture incremental: 加座位後重新置中該排 ============
+function lectureRecenterRow(rowIdx) {
+  const rowSeats = state.seats.filter(s => s.key && s.key.startsWith(`lecture-r${rowIdx}-`));
+  if (rowSeats.length === 0) return;
+  const sorted = [...rowSeats].sort((a, b) => a.x - b.x);
+  const minX = sorted[0].x;
+  const maxX = sorted[sorted.length - 1].x + SEAT_W;
+  const rowCenter = (minX + maxX) / 2;
+  const dx = PODIUM_CENTER_X - rowCenter;
+  if (Math.abs(dx) > 0.5) {
+    rowSeats.forEach(s => { s.x += dx; });
+  }
+}
+
+function lectureAddSeatToRow(rowIdx) {
+  const rowSeats = state.seats.filter(s => s.key && s.key.startsWith(`lecture-r${rowIdx}-`));
+  if (rowSeats.length === 0) return;
+  const sorted = [...rowSeats].sort((a, b) => a.x - b.x);
+  const last = sorted[sorted.length - 1];
+  let spacing = 110;
+  if (sorted.length >= 2) spacing = sorted[1].x - sorted[0].x;
+  const newCol = state.rowCounts[rowIdx];
+  state.seats.push({
+    id: state.nextSeatId++, x: last.x + spacing, y: last.y,
+    studentId: null, status: 'present', note: '',
+    key: `lecture-r${rowIdx}-c${newCol}`
+  });
+  state.rowCounts[rowIdx]++;
+  // 整排重新置中於講師區
+  lectureRecenterRow(rowIdx);
+}
+
+function lectureRemoveSeatFromRow(rowIdx) {
+  const rowSeats = state.seats.filter(s => s.key && s.key.startsWith(`lecture-r${rowIdx}-`));
+  if (rowSeats.length === 0) return;
+  const sorted = [...rowSeats].sort((a, b) => b.x - a.x);
+  state.seats = state.seats.filter(s => s.id !== sorted[0].id);
+  state.rowCounts[rowIdx]--;
+  // 移除後也重新置中
+  lectureRecenterRow(rowIdx);
+}
+
+function lectureAddRow() {
+  const newRowIdx = state.rowCounts.length;
+  const cols = state.rowCounts.length > 0 ? state.rowCounts[state.rowCounts.length - 1] : 5;
+  let maxY = 40 - 100;
+  state.seats.forEach(s => {
+    if (s.key && s.key.startsWith('lecture-') && s.y > maxY) maxY = s.y;
+  });
+  const newY = maxY + 100;
+  let spacingX = 110;
+  if (state.rowCounts.length > 0) {
+    const firstRowSeats = state.seats
+      .filter(s => s.key && s.key.startsWith(`lecture-r0-`))
+      .sort((a, b) => a.x - b.x);
+    if (firstRowSeats.length >= 2) spacingX = firstRowSeats[1].x - firstRowSeats[0].x;
+  }
+  const rowWidth = (cols - 1) * spacingX;
+  const startX = PODIUM_CENTER_X - rowWidth / 2 - SEAT_W / 2;
+  for (let c = 0; c < cols; c++) {
+    state.seats.push({
+      id: state.nextSeatId++, x: startX + c * spacingX, y: newY,
+      studentId: null, status: 'present', note: '',
+      key: `lecture-r${newRowIdx}-c${c}`
+    });
+  }
+  state.rowCounts.push(cols);
+}
+
+function lectureRemoveRow(rowIdx) {
+  state.seats = state.seats.filter(s => !(s.key && s.key.startsWith(`lecture-r${rowIdx}-`)));
+  state.rowCounts.splice(rowIdx, 1);
+  state.seats.forEach(s => {
+    if (!s.key || !s.key.startsWith('lecture-')) return;
+    const m = s.key.match(/^lecture-r(\d+)-c(\d+)$/);
+    if (m) {
+      const r = +m[1], c = +m[2];
+      if (r > rowIdx) s.key = `lecture-r${r - 1}-c${c}`;
+    }
+  });
+}
+
+function groupAddSeatToTable(tableIdx) {
+  const newCount = state.tableCounts[tableIdx] + 1;
+  state.tableCounts[tableIdx] = newCount;
+  const tableSeats = state.seats
+    .filter(s => s.key && s.key.startsWith(`table-t${tableIdx}-`))
+    .sort((a, b) => +a.key.split('-s')[1] - +b.key.split('-s')[1]);
+  const assignments = tableSeats.map(s => ({ studentId: s.studentId, status: s.status, note: s.note }));
+  state.seats = state.seats.filter(s => !(s.key && s.key.startsWith(`table-t${tableIdx}-`)));
+  const tableInfo = state._tableLayout[tableIdx];
+  if (!tableInfo) return;
+  if (newCount > 6) tableInfo.r = tableInfo.r + 4;
+  for (let i = 0; i < newCount; i++) {
+    const angle = (i / newCount) * Math.PI * 2 - Math.PI / 2;
+    const sx = tableInfo.cx + Math.cos(angle) * (tableInfo.r + 38) - SEAT_W / 2;
+    const sy = tableInfo.cy + Math.sin(angle) * (tableInfo.r + 38) - SEAT_H / 2;
+    const seat = {
+      id: state.nextSeatId++, x: sx, y: sy,
+      studentId: null, status: 'present', note: '', group: tableIdx + 1,
+      key: `table-t${tableIdx}-s${i}`
+    };
+    if (assignments[i]) {
+      seat.studentId = assignments[i].studentId;
+      seat.status = assignments[i].status;
+      seat.note = assignments[i].note;
+    }
+    state.seats.push(seat);
+  }
+}
+
+function groupRemoveSeatFromTable(tableIdx) {
+  if (state.tableCounts[tableIdx] <= 1) return;
+  const newCount = state.tableCounts[tableIdx] - 1;
+  state.tableCounts[tableIdx] = newCount;
+  const tableSeats = state.seats
+    .filter(s => s.key && s.key.startsWith(`table-t${tableIdx}-`))
+    .sort((a, b) => +a.key.split('-s')[1] - +b.key.split('-s')[1]);
+  const assignments = tableSeats.slice(0, newCount).map(s => ({
+    studentId: s.studentId, status: s.status, note: s.note
+  }));
+  state.seats = state.seats.filter(s => !(s.key && s.key.startsWith(`table-t${tableIdx}-`)));
+  const tableInfo = state._tableLayout[tableIdx];
+  if (!tableInfo) return;
+  for (let i = 0; i < newCount; i++) {
+    const angle = (i / newCount) * Math.PI * 2 - Math.PI / 2;
+    const sx = tableInfo.cx + Math.cos(angle) * (tableInfo.r + 38) - SEAT_W / 2;
+    const sy = tableInfo.cy + Math.sin(angle) * (tableInfo.r + 38) - SEAT_H / 2;
+    const seat = {
+      id: state.nextSeatId++, x: sx, y: sy,
+      studentId: null, status: 'present', note: '', group: tableIdx + 1,
+      key: `table-t${tableIdx}-s${i}`
+    };
+    if (assignments[i]) {
+      seat.studentId = assignments[i].studentId;
+      seat.status = assignments[i].status;
+      seat.note = assignments[i].note;
+    }
+    state.seats.push(seat);
+  }
+}
+
+function groupAddTable() {
+  const newTableIdx = state.tableCounts.length;
+  state.tableCounts.push(6);
+  const baseRadius = Math.min(AREA_W, AREA_H) * 0.18;
+  let cx, cy;
+  if (state._tableLayout.length === 0) {
+    cx = PODIUM_CENTER_X; cy = AREA_H / 2;
+  } else {
+    const maxX = Math.max(...state._tableLayout.map(t => t.cx + t.r));
+    const minX = Math.min(...state._tableLayout.map(t => t.cx - t.r));
+    const maxY = Math.max(...state._tableLayout.map(t => t.cy + t.r));
+    if (maxX + baseRadius * 2 + 80 < AREA_W) {
+      cx = maxX + baseRadius + 40;
+      cy = state._tableLayout[state._tableLayout.length - 1].cy;
+    } else {
+      cx = (minX + maxX) / 2;
+      cy = maxY + baseRadius + 40;
+    }
+  }
+  state._tableLayout.push({ cx, cy, r: baseRadius, label: '組 ' + (newTableIdx + 1), tableIndex: newTableIdx });
+  const perTable = 6;
+  for (let i = 0; i < perTable; i++) {
+    const angle = (i / perTable) * Math.PI * 2 - Math.PI / 2;
+    const sx = cx + Math.cos(angle) * (baseRadius + 38) - SEAT_W / 2;
+    const sy = cy + Math.sin(angle) * (baseRadius + 38) - SEAT_H / 2;
+    state.seats.push({
+      id: state.nextSeatId++, x: sx, y: sy,
+      studentId: null, status: 'present', note: '', group: newTableIdx + 1,
+      key: `table-t${newTableIdx}-s${i}`
+    });
+  }
+}
+
+function groupRemoveTable(tableIdx) {
+  state.seats = state.seats.filter(s => !(s.key && s.key.startsWith(`table-t${tableIdx}-`)));
+  state.tableCounts.splice(tableIdx, 1);
+  state._tableLayout.splice(tableIdx, 1);
+  state.seats.forEach(s => {
+    if (!s.key || !s.key.startsWith('table-')) return;
+    const m = s.key.match(/^table-t(\d+)-s(\d+)$/);
+    if (m) {
+      const t = +m[1], i = +m[2];
+      if (t > tableIdx) {
+        s.key = `table-t${t - 1}-s${i}`;
+        s.group = t;
+      }
+    }
+  });
+  state._tableLayout.forEach((t, i) => {
+    t.label = '組 ' + (i + 1);
+    t.tableIndex = i;
+  });
+}
+
+function uShapeAddSeat(side) {
+  const sideSeats = state.seats
+    .filter(s => s.key && s.key.startsWith(`u-${side}-`))
+    .sort((a, b) => +a.key.split('-')[2] - +b.key.split('-')[2]);
+  const newIdx = state.uShape[side];
+  if (sideSeats.length === 0) {
+    state.uShape[side]++;
+    initUShapeLayout();
+    return;
+  }
+  let newX, newY;
+  if (side === 'left' || side === 'right') {
+    const spacing = sideSeats.length >= 2 ? sideSeats[1].y - sideSeats[0].y : 90;
+    const last = sideSeats[sideSeats.length - 1];
+    newX = last.x; newY = last.y + spacing;
+  } else {
+    const spacing = sideSeats.length >= 2 ? sideSeats[1].x - sideSeats[0].x : 100;
+    const last = sideSeats[sideSeats.length - 1];
+    newX = last.x + spacing; newY = last.y;
+  }
+  state.seats.push({
+    id: state.nextSeatId++, x: newX, y: newY,
+    studentId: null, status: 'present', note: '',
+    key: `u-${side}-${newIdx}`
+  });
+  state.uShape[side]++;
+}
+
+function uShapeRemoveSeat(side) {
+  if (state.uShape[side] === 0) return;
+  const sideSeats = state.seats
+    .filter(s => s.key && s.key.startsWith(`u-${side}-`))
+    .sort((a, b) => +a.key.split('-')[2] - +b.key.split('-')[2]);
+  if (sideSeats.length === 0) return;
+  state.seats = state.seats.filter(s => s.id !== sideSeats[sideSeats.length - 1].id);
+  state.uShape[side]--;
+}
+
+// ============ Layout switcher ============
+function setLayout(layout) {
+  const prev = state.layout;
+  state.layout = layout;
+  document.querySelectorAll('.layout-card').forEach(c => {
+    c.classList.toggle('active', c.dataset.layout === layout);
+  });
+  clearSelection();
+  if (layout === 'free') {
+    renderLayoutConfig();
+    render();
+    return;
+  }
+  if (prev !== layout) state.layoutInitialized[layout] = false;
+  if (!state.layoutInitialized[layout]) {
+    state.nextSeatId = 1;
+    initCurrentLayout();
+  }
+  renderLayoutConfig();
+  render();
+}
+
+function renderLayoutConfig() {
+  const wrap = document.getElementById('layoutConfig');
+  let html = '';
+  if (state.layout === 'lecture') {
+    html = `<div class="unit-list" id="rowList"></div>
+      <div class="unit-add-row">
+        <button class="btn btn-sm" onclick="onAddRow()">＋ 新增一排</button>
+      </div>
+      <p class="help-text">每排可獨立增減；新增/減少時該排會自動以講師區為中心對齊</p>`;
+  } else if (state.layout === 'group') {
+    html = `<div class="unit-list" id="tableList"></div>
+      <div class="unit-add-row">
+        <button class="btn btn-sm" onclick="onAddTable()">＋ 新增一桌</button>
+      </div>
+      <p class="help-text">每桌可獨立調整，不影響其他桌</p>`;
+  } else if (state.layout === 'ushape') {
+    html = `
+      <div class="dir-toggle">
+        <button class="${state.uShape.orientation === 'u' ? 'active' : ''}" onclick="setUOrientation('u')">U 字（開口朝上）</button>
+        <button class="${state.uShape.orientation === 'n' ? 'active' : ''}" onclick="setUOrientation('n')">ㄇ 字（開口朝下）</button>
+      </div>
+      <div class="unit-list" id="uList"></div>
+      <p class="help-text">${state.uShape.orientation === 'u' ? '開口面向講師' : '頂部接近講師'}；底部緊貼兩側座位下方</p>
+    `;
+  } else if (state.layout === 'free') {
+    html = `
+      <button class="btn btn-block btn-primary" onclick="addFreeSeat()">＋ 新增座位</button>
+      <p class="help-text">新座位整列以講師區為中心對齊；空白處可框選</p>
+    `;
+  }
+  wrap.innerHTML = html;
+  renderUnitList();
+}
+
+function renderUnitList() {
+  if (state.layout === 'lecture') {
+    const list = document.getElementById('rowList');
+    if (!list) return;
+    list.innerHTML = state.rowCounts.map((cnt, i) => `
+      <div class="unit-item">
+        <span class="unit-label">第 ${i + 1} 排</span>
+        <button class="unit-btn" onclick="onRowMinus(${i})">−</button>
+        <span class="unit-count">${cnt}</span>
+        <button class="unit-btn" onclick="onRowPlus(${i})">+</button>
+        <button class="unit-btn danger" onclick="onRowRemove(${i})" title="刪除整排">×</button>
+      </div>
+    `).join('');
+  } else if (state.layout === 'group') {
+    const list = document.getElementById('tableList');
+    if (!list) return;
+    list.innerHTML = state.tableCounts.map((cnt, i) => `
+      <div class="unit-item">
+        <span class="unit-label">第 ${i + 1} 桌</span>
+        <button class="unit-btn" onclick="onTableMinus(${i})">−</button>
+        <span class="unit-count">${cnt}</span>
+        <button class="unit-btn" onclick="onTablePlus(${i})">+</button>
+        <button class="unit-btn danger" onclick="onTableRemove(${i})" title="刪除整桌">×</button>
+      </div>
+    `).join('');
+  } else if (state.layout === 'ushape') {
+    const list = document.getElementById('uList');
+    if (!list) return;
+    const isU = state.uShape.orientation === 'u';
+    const sides = [
+      { key: 'left', label: '左側' },
+      { key: 'right', label: '右側' },
+      { key: 'bottom', label: isU ? '底部' : '頂部' }
+    ];
+    list.innerHTML = sides.map(side => `
+      <div class="unit-item">
+        <span class="unit-label">${side.label}</span>
+        <button class="unit-btn" onclick="onUMinus('${side.key}')">−</button>
+        <span class="unit-count">${state.uShape[side.key]}</span>
+        <button class="unit-btn" onclick="onUPlus('${side.key}')">+</button>
+      </div>
+    `).join('');
+  }
+}
+
+function onRowPlus(rowIdx) { lectureAddSeatToRow(rowIdx); render(); }
+function onRowMinus(rowIdx) {
+  if (state.rowCounts[rowIdx] <= 0) return;
+  lectureRemoveSeatFromRow(rowIdx);
+  if (state.rowCounts[rowIdx] === 0 && state.rowCounts.length > 1) {
+    lectureRemoveRow(rowIdx);
+  }
+  render();
+}
+function onAddRow() { lectureAddRow(); render(); }
+function onRowRemove(rowIdx) {
+  if (state.rowCounts.length <= 1) { showToast('至少需保留一排'); return; }
+  if (!confirm(`確定要刪除第 ${rowIdx + 1} 排嗎？`)) return;
+  lectureRemoveRow(rowIdx); render();
+}
+function onTablePlus(tableIdx) { groupAddSeatToTable(tableIdx); render(); }
+function onTableMinus(tableIdx) { groupRemoveSeatFromTable(tableIdx); render(); }
+function onAddTable() {
+  if (state.tableCounts.length >= 9) { showToast('最多 9 桌'); return; }
+  groupAddTable(); render();
+}
+function onTableRemove(tableIdx) {
+  if (state.tableCounts.length <= 1) { showToast('至少需保留一桌'); return; }
+  if (!confirm(`確定要刪除第 ${tableIdx + 1} 桌嗎？`)) return;
+  groupRemoveTable(tableIdx); render();
+}
+function onUPlus(side) { if (state.uShape[side] >= 15) return; uShapeAddSeat(side); render(); }
+function onUMinus(side) { uShapeRemoveSeat(side); render(); }
+
+function setUOrientation(orient) {
+  state.uShape.orientation = orient;
+  state.nextSeatId = 1;
+  initUShapeLayout();
+  renderLayoutConfig();
+  render();
+}
+
+// ============ Free seat ============
+function addFreeSeat() {
+  if (state.seats.length === 0) {
+    let x = PODIUM_CENTER_X - SEAT_W / 2;
+    let y = 40;
+    if (state.snapEnabled) {
+      x = Math.round(x / state.gridSize) * state.gridSize;
+      y = Math.round(y / state.gridSize) * state.gridSize;
+    }
+    state.seats.push({
+      id: state.nextSeatId++, x, y,
+      studentId: null, status: 'present', note: '',
+      key: `free-${state.nextSeatId}`
+    });
+    render();
+    return;
+  }
+  const maxY = Math.max(...state.seats.map(s => s.y));
+  const lastRowSeats = state.seats.filter(s => Math.abs(s.y - maxY) < SEAT_H / 2);
+  const sortedRow = [...lastRowSeats].sort((a, b) => a.x - b.x);
+  let spacingX = 12 + SEAT_W;
+  if (sortedRow.length >= 2) spacingX = sortedRow[1].x - sortedRow[0].x;
+
+  let candidateX = sortedRow[sortedRow.length - 1].x + spacingX;
+  let candidateY = maxY;
+
+  if (candidateX + SEAT_W > AREA_W) {
+    candidateY = maxY + SEAT_H + 12;
+    if (candidateY + SEAT_H > AREA_H) {
+      candidateY = AREA_H - SEAT_H - 4;
+      candidateX = AREA_W - SEAT_W - 4;
+      const overlap = state.seats.some(s => Math.abs(s.x - candidateX) < 4 && Math.abs(s.y - candidateY) < 4);
+      if (overlap) candidateX -= SEAT_W + 12;
+    } else {
+      candidateX = PODIUM_CENTER_X - SEAT_W / 2;
+    }
+  }
+
+  if (state.snapEnabled) {
+    candidateX = Math.round(candidateX / state.gridSize) * state.gridSize;
+    candidateY = Math.round(candidateY / state.gridSize) * state.gridSize;
+  }
+
+  state.seats.push({
+    id: state.nextSeatId++,
+    x: candidateX, y: candidateY,
+    studentId: null, status: 'present', note: '',
+    key: `free-${state.nextSeatId}`
+  });
+
+  // 將新座位所屬列整體重新置中
+  const newRowSeats = state.seats.filter(s => Math.abs(s.y - candidateY) < SEAT_H / 2);
+  if (newRowSeats.length > 0) {
+    const minX = Math.min(...newRowSeats.map(s => s.x));
+    const maxX = Math.max(...newRowSeats.map(s => s.x + SEAT_W));
+    const rowCenter = (minX + maxX) / 2;
+    let dx = PODIUM_CENTER_X - rowCenter;
+    if (state.snapEnabled) {
+      dx = Math.round(dx / state.gridSize) * state.gridSize;
+    }
+    if (dx !== 0) {
+      newRowSeats.forEach(s => {
+        s.x += dx;
+        s.x = Math.max(0, Math.min(AREA_W - SEAT_W, s.x));
+      });
+    }
+  }
+
+  render();
+}
+
+// ============ Direct seat deletion ============
+function deleteSeatDirectly(seatId) {
+  const seat = state.seats.find(s => s.id === seatId);
+  if (!seat) return;
+  if (state.layout === 'lecture') {
+    const m = seat.key && seat.key.match(/^lecture-r(\d+)-c(\d+)$/);
+    if (m) {
+      const rowIdx = +m[1];
+      state.seats = state.seats.filter(s => s.id !== seatId);
+      state.rowCounts[rowIdx]--;
+      const rowSeats = state.seats
+        .filter(s => s.key && s.key.startsWith(`lecture-r${rowIdx}-`))
+        .sort((a, b) => a.x - b.x);
+      rowSeats.forEach((s, i) => { s.key = `lecture-r${rowIdx}-c${i}`; });
+      if (state.rowCounts[rowIdx] === 0 && state.rowCounts.length > 1) {
+        lectureRemoveRow(rowIdx);
+      } else {
+        lectureRecenterRow(rowIdx);
+      }
+      render(); return;
+    }
+  } else if (state.layout === 'group') {
+    const m = seat.key && seat.key.match(/^table-t(\d+)-s(\d+)$/);
+    if (m) {
+      const tableIdx = +m[1];
+      if (state.tableCounts[tableIdx] <= 1) { showToast('每桌至少保留 1 位'); return; }
+      groupRemoveSeatFromTable(tableIdx); render(); return;
+    }
+  } else if (state.layout === 'ushape') {
+    const m = seat.key && seat.key.match(/^u-(left|right|bottom)-(\d+)$/);
+    if (m) {
+      const side = m[1];
+      state.seats = state.seats.filter(s => s.id !== seatId);
+      state.uShape[side]--;
+      const sideSeats = state.seats
+        .filter(s => s.key && s.key.startsWith(`u-${side}-`))
+        .sort((a, b) => side === 'bottom' ? a.x - b.x : a.y - b.y);
+      sideSeats.forEach((s, i) => { s.key = `u-${side}-${i}`; });
+      render(); return;
+    }
+  }
+  state.seats = state.seats.filter(s => s.id !== seatId);
+  render();
+}
+
+function swapSeatContents(seatA, seatB) {
+  const tmp = { studentId: seatA.studentId, status: seatA.status, note: seatA.note };
+  seatA.studentId = seatB.studentId;
+  seatA.status = seatB.status;
+  seatA.note = seatB.note;
+  seatB.studentId = tmp.studentId;
+  seatB.status = tmp.status;
+  seatB.note = tmp.note;
+}
+
+// ============ Multi-selection ============
+function toggleSeatSelection(seatId) {
+  if (state.selectedSeatIds.has(seatId)) {
+    state.selectedSeatIds.delete(seatId);
+  } else {
+    state.selectedSeatIds.add(seatId);
+  }
+  updateMultiToolbar();
+  render();
+}
+
+function clearSelection() {
+  state.selectedSeatIds.clear();
+  updateMultiToolbar();
+  render();
+}
+
+function updateMultiToolbar() {
+  const toolbar = document.getElementById('multiToolbar');
+  const count = state.selectedSeatIds.size;
+  if (count > 0) {
+    toolbar.classList.add('show');
+    document.getElementById('multiCount').textContent = count;
+  } else {
+    toolbar.classList.remove('show');
+  }
+}
+
+function deleteSelected() {
+  if (state.selectedSeatIds.size === 0) return;
+  if (!confirm(`確定要刪除已選取的 ${state.selectedSeatIds.size} 個座位嗎？`)) return;
+  // 逐個刪除（會自動處理各模式的 key 與計數）
+  const ids = [...state.selectedSeatIds];
+  ids.forEach(id => deleteSeatDirectly(id));
+  state.selectedSeatIds.clear();
+  updateMultiToolbar();
+}
+
+// ============ Toggles ============
+function toggleSnap() { state.snapEnabled = !state.snapEnabled; document.getElementById('snapToggle').classList.toggle('on', state.snapEnabled); }
+function toggleGuide() { state.guideEnabled = !state.guideEnabled; document.getElementById('guideToggle').classList.toggle('on', state.guideEnabled); }
+function toggleSpacing() { state.spacingEnabled = !state.spacingEnabled; document.getElementById('spacingToggle').classList.toggle('on', state.spacingEnabled); }
+function toggleGrid() { state.gridVisible = !state.gridVisible; document.getElementById('gridToggle').classList.toggle('on', state.gridVisible); applyGridVisibility(); }
+
+function applyGridVisibility() {
+  const area = document.getElementById('layoutArea');
+  area.classList.toggle('show-grid', state.layout === 'free' && state.gridVisible);
+}
+
+// ============ Render ============
+function render() {
+  renderRoster();
+  renderSeats();
+  renderStats();
+  renderStageMeta();
+  renderUnitList();
+  applyGridVisibility();
+  updateMultiToolbar();
+}
+
+function renderStageMeta() {
+  const title = document.getElementById('sessionTitle').value || '親職方案 ・ 座位配置';
+  document.getElementById('stageTitle').textContent = title;
+  const date = document.getElementById('sessionDate').value;
+  const loc = document.getElementById('sessionLocation').value;
+  let meta = [];
+  if (date) meta.push(date);
+  if (loc) meta.push(loc);
+  document.getElementById('stageMeta').textContent = meta.length ? meta.join(' · ') : 'SEATING / PLAN';
+}
+
+function renderRoster() {
+  const list = document.getElementById('rosterList');
+  if (state.students.length === 0) {
+    list.innerHTML = '<li class="roster-empty">尚未加入學員</li>';
+    return;
+  }
+  const placedIds = new Set(state.seats.filter(s => s.studentId).map(s => s.studentId));
+  list.innerHTML = state.students.map(s => `
+    <li class="roster-item ${placedIds.has(s.id) ? 'placed' : ''}"
+        draggable="true" data-student-id="${s.id}">
+      <span class="gender-badge ${s.gender}" data-cycle-gender="${s.id}" title="點擊切換性別">${GENDER_ICON[s.gender]}</span>
+      <span class="roster-name" data-edit-student="${s.id}" title="點擊編輯">${escapeHtml(s.name)}</span>
+      <button class="roster-remove" onclick="removeStudent(${s.id})">×</button>
+    </li>
+  `).join('');
+
+  list.querySelectorAll('.roster-item').forEach(item => {
+    item.addEventListener('dragstart', e => {
+      if (e.target.closest('[data-cycle-gender]') || e.target.closest('[data-edit-student]')) {
+        e.preventDefault(); return;
+      }
+      item.classList.add('dragging');
+      e.dataTransfer.setData('text/student-id', item.dataset.studentId);
+      e.dataTransfer.effectAllowed = 'move';
+    });
+    item.addEventListener('dragend', () => item.classList.remove('dragging'));
+  });
+
+  list.querySelectorAll('[data-cycle-gender]').forEach(badge => {
+    badge.addEventListener('click', e => {
+      e.stopPropagation();
+      cycleStudentGender(+badge.dataset.cycleGender);
+    });
+    badge.addEventListener('mousedown', e => e.stopPropagation());
+  });
+
+  list.querySelectorAll('[data-edit-student]').forEach(name => {
+    name.addEventListener('click', e => {
+      e.stopPropagation();
+      openStudentModal(+name.dataset.editStudent);
+    });
+    name.addEventListener('mousedown', e => e.stopPropagation());
+  });
+}
+
+function cycleStudentGender(studentId) {
+  const s = state.students.find(x => x.id === studentId);
+  if (!s) return;
+  const idx = GENDER_ORDER.indexOf(s.gender);
+  s.gender = GENDER_ORDER[(idx + 1) % GENDER_ORDER.length];
+  render();
+}
+
+function renderSeats() {
+  const area = document.getElementById('layoutArea');
+  area.innerHTML = '';
+
+  // Selection box
+  const selBox = document.createElement('div');
+  selBox.className = 'selection-box';
+  selBox.id = 'selectionBox';
+  area.appendChild(selBox);
+
+  if (state.layout === 'group' && state._tableLayout) {
+    state._tableLayout.forEach(t => {
+      const div = document.createElement('div');
+      div.className = 'round-table';
+      div.style.left = (t.cx - t.r) + 'px';
+      div.style.top = (t.cy - t.r) + 'px';
+      div.style.width = (t.r * 2) + 'px';
+      div.style.height = (t.r * 2) + 'px';
+      div.textContent = t.label;
+      area.appendChild(div);
+    });
+  }
+
+  for (let i = 0; i < 6; i++) {
+    const g = document.createElement('div');
+    g.className = 'align-guide';
+    g.id = 'guide-' + i;
+    area.appendChild(g);
+  }
+  for (let i = 0; i < 4; i++) {
+    const sp = document.createElement('div');
+    sp.className = 'spacing-indicator';
+    sp.id = 'spacing-' + i;
+    sp.innerHTML = `<div class="line"></div><div class="cap" data-cap="start"></div><div class="cap" data-cap="end"></div><div class="spacing-label"></div>`;
+    area.appendChild(sp);
+  }
+
+  state.seats.forEach((seat, idx) => {
+    const div = document.createElement('div');
+    div.className = 'seat';
+    if (state.layout === 'free') div.classList.add('draggable-mode');
+    if (state.selectedSeatIds.has(seat.id)) div.classList.add('multi-selected');
+    div.style.left = seat.x + 'px';
+    div.style.top = seat.y + 'px';
+    div.dataset.seatId = seat.id;
+
+    const student = seat.studentId ? state.students.find(s => s.id === seat.studentId) : null;
+    if (student) {
+      div.classList.add('occupied', student.gender);
+      if (seat.status === 'absent') div.classList.add('absent');
+      if (seat.status === 'late') div.classList.add('late');
+    }
+
+    let html = `<div class="seat-num">${String(idx + 1).padStart(2, '0')}</div>`;
+    if (student) {
+      html += `<div class="seat-gender-icon ${student.gender}" data-cycle-seat-gender="${student.id}" title="點擊切換性別">${GENDER_ICON[student.gender]}</div>`;
+      html += `<div class="seat-name">${escapeHtml(student.name)}</div>`;
+      const statusText = { present: '出席', late: '遲到', absent: '缺席' };
+      html += `<div class="seat-status ${seat.status}">${statusText[seat.status]}</div>`;
+      if (seat.note) html += `<div class="seat-special" title="${escapeHtml(seat.note)}">!</div>`;
+    } else {
+      html += `<div class="seat-empty-label" style="margin-top:8px">空位</div>`;
+    }
+    html += `<div class="seat-quick-del" data-seat-del="${seat.id}" title="刪除此座位">×</div>`;
+    div.innerHTML = html;
+
+    div.addEventListener('dragover', e => {
+      if (e.dataTransfer.types.includes('text/student-id')) {
+        e.preventDefault();
+        div.classList.add('drop-target');
+      }
+    });
+    div.addEventListener('dragleave', () => div.classList.remove('drop-target'));
+    div.addEventListener('drop', e => {
+      e.preventDefault();
+      div.classList.remove('drop-target');
+      const studentId = +e.dataTransfer.getData('text/student-id');
+      if (studentId) assignStudent(seat.id, studentId);
+    });
+
+    attachUnifiedDrag(div, seat, area);
+
+    area.appendChild(div);
+  });
+
+  // 設定 area 的框選 & 點空白處取消選取
+  setupAreaInteractions(area);
+}
+
+// ============ Area interactions: 框選、點空白取消 ============
+function setupAreaInteractions(area) {
+  let isBoxSelecting = false;
+  let boxStartX = 0, boxStartY = 0;
+  let mouseDownTarget = null;
+
+  area.onmousedown = e => {
+    if (e.button !== 0) return;
+    // 只處理「點擊在 area 本身或在 selection-box 上」的情況（避免座位點擊也觸發）
+    if (e.target.closest('.seat')) return;
+    if (e.target.closest('.round-table')) return;
+
+    mouseDownTarget = e.target;
+    const areaRect = area.getBoundingClientRect();
+    boxStartX = e.clientX - areaRect.left;
+    boxStartY = e.clientY - areaRect.top;
+
+    // 只有自由配置才啟用框選；其他模式只在空白處點擊取消選取
+    if (state.layout !== 'free') {
+      // 若有選取，點空白處取消
+      if (state.selectedSeatIds.size > 0 && !e.ctrlKey && !e.metaKey) {
+        clearSelection();
+      }
+      return;
+    }
+
+    isBoxSelecting = true;
+    const box = document.getElementById('selectionBox');
+    box.classList.add('show');
+    box.style.left = boxStartX + 'px';
+    box.style.top = boxStartY + 'px';
+    box.style.width = '0px';
+    box.style.height = '0px';
+
+    let hasMoved = false;
+
+    const move = ev => {
+      if (!isBoxSelecting) return;
+      const cx = ev.clientX - areaRect.left;
+      const cy = ev.clientY - areaRect.top;
+      if (Math.abs(cx - boxStartX) > 2 || Math.abs(cy - boxStartY) > 2) hasMoved = true;
+      const x = Math.min(boxStartX, cx);
+      const y = Math.min(boxStartY, cy);
+      const w = Math.abs(cx - boxStartX);
+      const h = Math.abs(cy - boxStartY);
+      box.style.left = x + 'px';
+      box.style.top = y + 'px';
+      box.style.width = w + 'px';
+      box.style.height = h + 'px';
+    };
+
+    const up = ev => {
+      document.removeEventListener('mousemove', move);
+      document.removeEventListener('mouseup', up);
+      isBoxSelecting = false;
+      box.classList.remove('show');
+
+      if (!hasMoved) {
+        // 沒拖動 → 點空白處取消選取
+        if (state.selectedSeatIds.size > 0 && !ev.ctrlKey && !ev.metaKey) {
+          clearSelection();
+        }
+        return;
+      }
+
+      // 計算框選範圍內的座位
+      const finalX = ev.clientX - areaRect.left;
+      const finalY = ev.clientY - areaRect.top;
+      const bx1 = Math.min(boxStartX, finalX);
+      const by1 = Math.min(boxStartY, finalY);
+      const bx2 = Math.max(boxStartX, finalX);
+      const by2 = Math.max(boxStartY, finalY);
+
+      const additive = ev.shiftKey || ev.ctrlKey || ev.metaKey;
+      if (!additive) state.selectedSeatIds.clear();
+
+      state.seats.forEach(s => {
+        const sx1 = s.x;
+        const sy1 = s.y;
+        const sx2 = s.x + SEAT_W;
+        const sy2 = s.y + SEAT_H;
+        // 與框框相交即選取
+        if (sx2 >= bx1 && sx1 <= bx2 && sy2 >= by1 && sy1 <= by2) {
+          state.selectedSeatIds.add(s.id);
+        }
+      });
+
+      updateMultiToolbar();
+      render();
+    };
+
+    document.addEventListener('mousemove', move);
+    document.addEventListener('mouseup', up);
+    e.preventDefault();
+  };
+}
+
+// ============ Unified drag (支援單一/多選整組拖動 + 對齊 + 互換) ============
+function attachUnifiedDrag(div, seat, area) {
+  div.addEventListener('mousedown', e => {
+    if (e.button !== 0) return;
+    if (e.target.closest('.seat-quick-del')) return;
+    if (e.target.closest('.seat-gender-icon')) return;
+
+    // Ctrl/Cmd + 點擊 = toggle 選取
+    if (e.ctrlKey || e.metaKey) {
+      e.preventDefault();
+      e.stopPropagation();
+      toggleSeatSelection(seat.id);
+      return;
+    }
+
+    const startMouseX = e.clientX;
+    const startMouseY = e.clientY;
+    const startSeatX = seat.x;
+    const startSeatY = seat.y;
+    const areaRect = area.getBoundingClientRect();
+    const offsetX = e.clientX - areaRect.left - seat.x;
+    const offsetY = e.clientY - areaRect.top - seat.y;
+
+    let isDragging = false;
+    let isFreeMode = state.layout === 'free';
+    let currentSwapTarget = null;
+
+    // 多選整組拖動：如果此座位在選取集合中，則整組一起動
+    const isInSelection = state.selectedSeatIds.has(seat.id);
+    const groupSeats = isInSelection
+      ? state.seats.filter(s => state.selectedSeatIds.has(s.id))
+      : [seat];
+    const groupStartPositions = groupSeats.map(s => ({ id: s.id, x: s.x, y: s.y }));
+
+    e.preventDefault();
+    e.stopPropagation();
+
+    const move = ev => {
+      const dx = ev.clientX - startMouseX;
+      const dy = ev.clientY - startMouseY;
+      if (!isDragging) {
+        if (Math.abs(dx) < DRAG_THRESHOLD && Math.abs(dy) < DRAG_THRESHOLD) return;
+        isDragging = true;
+        div.classList.add('dragging');
+        groupSeats.forEach(s => {
+          if (s.id !== seat.id) {
+            const el = area.querySelector(`[data-seat-id="${s.id}"]`);
+            if (el) el.classList.add('dragging');
+          }
+        });
+      }
+
+      let newX = ev.clientX - areaRect.left - offsetX;
+      let newY = ev.clientY - areaRect.top - offsetY;
+      newX = Math.max(0, Math.min(area.clientWidth - SEAT_W, newX));
+      newY = Math.max(0, Math.min(area.clientHeight - SEAT_H, newY));
+
+      // 偵測 swap target（僅在單一座位拖動時）
+      let targetSeat = null;
+      let targetSeatEl = null;
+      if (!isInSelection || groupSeats.length === 1) {
+        const targetEl = document.elementFromPoint(ev.clientX, ev.clientY);
+        targetSeatEl = targetEl ? targetEl.closest('.seat') : null;
+        const targetSeatId = targetSeatEl && targetSeatEl !== div ? +targetSeatEl.dataset.seatId : null;
+        targetSeat = targetSeatId ? state.seats.find(s => s.id === targetSeatId) : null;
+      }
+
+      if (currentSwapTarget && currentSwapTarget !== targetSeatEl) {
+        currentSwapTarget.classList.remove('swap-target');
+      }
+      if (targetSeatEl && targetSeatEl !== div) {
+        targetSeatEl.classList.add('swap-target');
+        currentSwapTarget = targetSeatEl;
+      } else {
+        currentSwapTarget = null;
+      }
+
+      if (isFreeMode) {
+        // 自由模式：實際移動
+        if (groupSeats.length > 1) {
+          // 整組拖動：計算位移差
+          const dxApply = newX - startSeatX;
+          const dyApply = newY - startSeatY;
+          groupSeats.forEach(s => {
+            const init = groupStartPositions.find(p => p.id === s.id);
+            s.x = init.x + dxApply;
+            s.y = init.y + dyApply;
+            s.x = Math.max(0, Math.min(AREA_W - SEAT_W, s.x));
+            s.y = Math.max(0, Math.min(AREA_H - SEAT_H, s.y));
+            const el = area.querySelector(`[data-seat-id="${s.id}"]`);
+            if (el) {
+              el.style.left = s.x + 'px';
+              el.style.top = s.y + 'px';
+            }
+          });
+          clearGuides();
+          clearSpacing();
+        } else {
+          // 單一座位：套用對齊與等距提示
+          const others = state.seats.filter(s => s.id !== seat.id);
+          let snappedX = newX, snappedY = newY;
+          let activeGuides = [];
+
+          if (state.guideEnabled && others.length > 0) {
+            const result = applyAlignmentSnap(newX, newY, others);
+            snappedX = result.x; snappedY = result.y;
+            activeGuides = result.guides;
+          }
+          if (state.snapEnabled) {
+            if (snappedX === newX) snappedX = Math.round(newX / state.gridSize) * state.gridSize;
+            if (snappedY === newY) snappedY = Math.round(newY / state.gridSize) * state.gridSize;
+          }
+          seat.x = snappedX;
+          seat.y = snappedY;
+          div.style.left = snappedX + 'px';
+          div.style.top = snappedY + 'px';
+          renderGuides(activeGuides);
+          if (state.spacingEnabled && others.length >= 2) {
+            renderSpacing(detectEqualSpacing(seat, others));
+          } else {
+            clearSpacing();
+          }
+        }
+      } else {
+        // 非自由模式：只是視覺移動，鬆開時還原或互換
+        div.style.left = newX + 'px';
+        div.style.top = newY + 'px';
+      }
+    };
+
+    const up = ev => {
+      document.removeEventListener('mousemove', move);
+      document.removeEventListener('mouseup', up);
+      div.classList.remove('dragging');
+      groupSeats.forEach(s => {
+        const el = area.querySelector(`[data-seat-id="${s.id}"]`);
+        if (el) el.classList.remove('dragging');
+      });
+      clearGuides();
+      clearSpacing();
+
+      if (!isDragging) {
+        // 點擊（沒拖動）→ 開啟詳細彈窗
+        // 若 ctrl/cmd 已在 mousedown 處理過，這裡不會到
+        // 若有選取且沒按 ctrl，點擊單一座位 = 取消其他選取，只留這個
+        if (state.selectedSeatIds.size > 0 && !state.selectedSeatIds.has(seat.id)) {
+          clearSelection();
+        }
+        openSeatModal(seat.id);
+        return;
+      }
+
+      if (currentSwapTarget) currentSwapTarget.classList.remove('swap-target');
+
+      // 單一座位 + 鬆開在另一座位上 → 互換
+      if (groupSeats.length === 1) {
+        const targetEl = document.elementFromPoint(ev.clientX, ev.clientY);
+        const targetSeatEl = targetEl ? targetEl.closest('.seat') : null;
+        const targetSeatId = targetSeatEl && targetSeatEl !== div ? +targetSeatEl.dataset.seatId : null;
+        if (targetSeatId) {
+          const targetSeat = state.seats.find(s => s.id === targetSeatId);
+          if (targetSeat) {
+            if (isFreeMode) {
+              seat.x = startSeatX; seat.y = startSeatY;
+            }
+            swapSeatContents(seat, targetSeat);
+            render();
+            return;
+          }
+        }
+      }
+
+      if (isFreeMode) {
+        render();
+      } else {
+        // 非自由模式沒互換 → 還原
+        div.style.left = startSeatX + 'px';
+        div.style.top = startSeatY + 'px';
+      }
+    };
+
+    document.addEventListener('mousemove', move);
+    document.addEventListener('mouseup', up);
+  });
+
+  const genderIcon = div.querySelector('.seat-gender-icon');
+  if (genderIcon) {
+    genderIcon.addEventListener('click', e => {
+      e.stopPropagation();
+      cycleStudentGender(+genderIcon.dataset.cycleSeatGender);
+    });
+  }
+  const delBtn = div.querySelector('.seat-quick-del');
+  if (delBtn) {
+    delBtn.addEventListener('click', e => {
+      e.stopPropagation();
+      deleteSeatDirectly(seat.id);
+    });
+  }
+}
+
+// ============ 對齊偵測 ============
+function applyAlignmentSnap(x, y, others) {
+  const threshold = state.snapThreshold;
+  const result = { x, y, guides: [] };
+  const moving = {
+    left: x, right: x + SEAT_W, centerX: x + SEAT_W / 2,
+    top: y, bottom: y + SEAT_H, centerY: y + SEAT_H / 2
+  };
+
+  let bestX = null, bestXDist = threshold + 1;
+  others.forEach(s => {
+    const t = {
+      left: s.x, right: s.x + SEAT_W, centerX: s.x + SEAT_W / 2,
+      top: s.y, bottom: s.y + SEAT_H, centerY: s.y + SEAT_H / 2
+    };
+    const xPairs = [
+      ['left', 'left', t.left], ['right', 'right', t.right - SEAT_W],
+      ['centerX', 'centerX', t.centerX - SEAT_W / 2],
+      ['left', 'right', t.right], ['right', 'left', t.left - SEAT_W],
+    ];
+    xPairs.forEach(([m, tk, snapX]) => {
+      const dist = Math.abs(moving[m] - t[tk]);
+      if (dist < bestXDist) { bestXDist = dist; bestX = { snapX, guideX: t[tk] }; }
+    });
+  });
+
+  let bestY = null, bestYDist = threshold + 1;
+  others.forEach(s => {
+    const t = {
+      left: s.x, right: s.x + SEAT_W, centerX: s.x + SEAT_W / 2,
+      top: s.y, bottom: s.y + SEAT_H, centerY: s.y + SEAT_H / 2
+    };
+    const yPairs = [
+      ['top', 'top', t.top], ['bottom', 'bottom', t.bottom - SEAT_H],
+      ['centerY', 'centerY', t.centerY - SEAT_H / 2],
+      ['top', 'bottom', t.bottom], ['bottom', 'top', t.top - SEAT_H],
+    ];
+    yPairs.forEach(([m, tk, snapY]) => {
+      const dist = Math.abs(moving[m] - t[tk]);
+      if (dist < bestYDist) { bestYDist = dist; bestY = { snapY, guideY: t[tk] }; }
+    });
+  });
+
+  if (bestX) {
+    result.x = bestX.snapX;
+    const alignedSeats = others.filter(s =>
+      Math.abs(s.x - bestX.guideX) < 0.5 ||
+      Math.abs(s.x + SEAT_W - bestX.guideX) < 0.5 ||
+      Math.abs(s.x + SEAT_W / 2 - bestX.guideX) < 0.5
+    );
+    const movingSnappedY = bestY ? bestY.snapY : y;
+    const allYs = alignedSeats.flatMap(s => [s.y, s.y + SEAT_H]).concat([movingSnappedY, movingSnappedY + SEAT_H]);
+    result.guides.push({
+      type: 'vertical', x: bestX.guideX,
+      yStart: Math.min(...allYs), yEnd: Math.max(...allYs)
+    });
+  }
+  if (bestY) {
+    result.y = bestY.snapY;
+    const alignedSeats = others.filter(s =>
+      Math.abs(s.y - bestY.guideY) < 0.5 ||
+      Math.abs(s.y + SEAT_H - bestY.guideY) < 0.5 ||
+      Math.abs(s.y + SEAT_H / 2 - bestY.guideY) < 0.5
+    );
+    const movingSnappedX = bestX ? bestX.snapX : x;
+    const allXs = alignedSeats.flatMap(s => [s.x, s.x + SEAT_W]).concat([movingSnappedX, movingSnappedX + SEAT_W]);
+    result.guides.push({
+      type: 'horizontal', y: bestY.guideY,
+      xStart: Math.min(...allXs), xEnd: Math.max(...allXs)
+    });
+  }
+  return result;
+}
+
+function detectEqualSpacing(movingSeat, others) {
+  const indicators = [];
+  const threshold = state.equalThreshold;
+  const movingCenterX = movingSeat.x + SEAT_W / 2;
+  const movingCenterY = movingSeat.y + SEAT_H / 2;
+
+  const horizontallyAligned = others.filter(s =>
+    Math.abs((s.y + SEAT_H / 2) - movingCenterY) < SEAT_H * 0.6
+  );
+  if (horizontallyAligned.length >= 2) {
+    const leftOnes = horizontallyAligned.filter(s => s.x + SEAT_W <= movingSeat.x + 2);
+    const rightOnes = horizontallyAligned.filter(s => s.x >= movingSeat.x + SEAT_W - 2);
+    if (leftOnes.length > 0 && rightOnes.length > 0) {
+      const leftSeat = leftOnes.reduce((a, b) => (b.x > a.x ? b : a));
+      const rightSeat = rightOnes.reduce((a, b) => (b.x < a.x ? b : a));
+      const gapLeft = movingSeat.x - (leftSeat.x + SEAT_W);
+      const gapRight = rightSeat.x - (movingSeat.x + SEAT_W);
+      if (Math.abs(gapLeft - gapRight) < threshold && gapLeft > 0 && gapRight > 0) {
+        const y = Math.max(movingSeat.y, leftSeat.y, rightSeat.y) + SEAT_H + 12;
+        indicators.push({ type: 'horizontal', x1: leftSeat.x + SEAT_W, x2: movingSeat.x, y, gap: Math.round(gapLeft) });
+        indicators.push({ type: 'horizontal', x1: movingSeat.x + SEAT_W, x2: rightSeat.x, y, gap: Math.round(gapRight) });
+      }
+    }
+  }
+  const verticallyAligned = others.filter(s =>
+    Math.abs((s.x + SEAT_W / 2) - movingCenterX) < SEAT_W * 0.6
+  );
+  if (verticallyAligned.length >= 2) {
+    const aboveOnes = verticallyAligned.filter(s => s.y + SEAT_H <= movingSeat.y + 2);
+    const belowOnes = verticallyAligned.filter(s => s.y >= movingSeat.y + SEAT_H - 2);
+    if (aboveOnes.length > 0 && belowOnes.length > 0) {
+      const aboveSeat = aboveOnes.reduce((a, b) => (b.y > a.y ? b : a));
+      const belowSeat = belowOnes.reduce((a, b) => (b.y < a.y ? b : a));
+      const gapAbove = movingSeat.y - (aboveSeat.y + SEAT_H);
+      const gapBelow = belowSeat.y - (movingSeat.y + SEAT_H);
+      if (Math.abs(gapAbove - gapBelow) < threshold && gapAbove > 0 && gapBelow > 0) {
+        const x = Math.max(movingSeat.x, aboveSeat.x, belowSeat.x) + SEAT_W + 12;
+        indicators.push({ type: 'vertical', y1: aboveSeat.y + SEAT_H, y2: movingSeat.y, x, gap: Math.round(gapAbove) });
+        indicators.push({ type: 'vertical', y1: movingSeat.y + SEAT_H, y2: belowSeat.y, x, gap: Math.round(gapBelow) });
+      }
+    }
+  }
+  return indicators.slice(0, 4);
+}
+
+function renderGuides(guides) {
+  clearGuides();
+  guides.forEach((g, i) => {
+    const el = document.getElementById('guide-' + i);
+    if (!el) return;
+    el.classList.add('show');
+    if (g.type === 'vertical') {
+      el.classList.add('vertical');
+      el.classList.remove('horizontal');
+      el.style.left = (g.x - 0.5) + 'px';
+      el.style.top = g.yStart + 'px';
+      el.style.height = (g.yEnd - g.yStart) + 'px';
+      el.style.width = '1px';
+    } else {
+      el.classList.add('horizontal');
+      el.classList.remove('vertical');
+      el.style.top = (g.y - 0.5) + 'px';
+      el.style.left = g.xStart + 'px';
+      el.style.width = (g.xEnd - g.xStart) + 'px';
+      el.style.height = '1px';
+    }
+  });
+}
+
+function clearGuides() {
+  for (let i = 0; i < 6; i++) {
+    const el = document.getElementById('guide-' + i);
+    if (el) el.classList.remove('show');
+  }
+}
+
+function renderSpacing(items) {
+  clearSpacing();
+  items.forEach((ind, i) => {
+    const wrap = document.getElementById('spacing-' + i);
+    if (!wrap) return;
+    const line = wrap.querySelector('.line');
+    const cap1 = wrap.querySelector('[data-cap="start"]');
+    const cap2 = wrap.querySelector('[data-cap="end"]');
+    const label = wrap.querySelector('.spacing-label');
+    wrap.classList.add('show');
+
+    if (ind.type === 'horizontal') {
+      wrap.style.left = ind.x1 + 'px';
+      wrap.style.top = ind.y + 'px';
+      wrap.style.width = (ind.x2 - ind.x1) + 'px';
+      wrap.style.height = '12px';
+      line.style.cssText = 'left:0; right:0; top:5px; height:2px; width:auto;';
+      cap1.style.cssText = 'left:0; top:0; width:2px; height:12px;';
+      cap2.style.cssText = 'left:auto; right:0; top:0; width:2px; height:12px;';
+      label.textContent = ind.gap + 'px';
+      label.style.cssText = 'left:50%; top:50%;';
+    } else {
+      wrap.style.left = ind.x + 'px';
+      wrap.style.top = ind.y1 + 'px';
+      wrap.style.height = (ind.y2 - ind.y1) + 'px';
+      wrap.style.width = '12px';
+      line.style.cssText = 'top:0; bottom:0; left:5px; width:2px; height:auto;';
+      cap1.style.cssText = 'left:0; top:0; width:12px; height:2px;';
+      cap2.style.cssText = 'left:0; bottom:0; top:auto; width:12px; height:2px;';
+      label.textContent = ind.gap + 'px';
+      label.style.cssText = 'left:50%; top:50%;';
+    }
+  });
+}
+
+function clearSpacing() {
+  for (let i = 0; i < 4; i++) {
+    const el = document.getElementById('spacing-' + i);
+    if (el) el.classList.remove('show');
+  }
+}
+
+function renderStats() {
+  const occupied = state.seats.filter(s => s.studentId);
+  document.getElementById('statTotal').textContent = occupied.length;
+  document.getElementById('statPresent').textContent = occupied.filter(s => s.status === 'present').length;
+  document.getElementById('statLate').textContent = occupied.filter(s => s.status === 'late').length;
+  document.getElementById('statAbsent').textContent = occupied.filter(s => s.status === 'absent').length;
+}
+
+// ============ Roster ============
+function switchRosterTab(tab) {
+  state.rosterTab = tab;
+  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.tab === tab));
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.toggle('active', c.id === 'tab-' + tab));
+}
+
+function addStudent() {
+  const input = document.getElementById('newName');
+  const name = input.value.trim();
+  if (!name) return;
+  state.students.push({ id: state.nextStudentId++, name, gender: state.selectedGender });
+  input.value = '';
+  render();
+}
+
+function bulkAddStudents() {
+  const text = document.getElementById('bulkInput').value;
+  if (!text.trim()) return;
+  const names = text.split(/[\n,,、]/).map(n => n.trim()).filter(Boolean);
+  if (names.length === 0) return;
+  names.forEach(name => state.students.push({ id: state.nextStudentId++, name, gender: state.bulkGender }));
+  document.getElementById('bulkInput').value = '';
+  render();
+  showToast(`已加入 ${names.length} 位學員`);
+}
+
+function removeStudent(id) {
+  if (!confirm('確定要刪除此學員嗎？')) return;
+  state.students = state.students.filter(s => s.id !== id);
+  state.seats.forEach(s => { if (s.studentId === id) s.studentId = null; });
+  render();
+}
+
+document.getElementById('genderPicker').addEventListener('click', e => {
+  const btn = e.target.closest('.gender-btn');
+  if (!btn) return;
+  document.querySelectorAll('#genderPicker .gender-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  state.selectedGender = btn.dataset.gender;
+});
+
+document.querySelectorAll('[data-bulk-gender]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('[data-bulk-gender]').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    state.bulkGender = btn.dataset.bulkGender;
+  });
+});
+
+function assignStudent(seatId, studentId) {
+  state.seats.forEach(s => { if (s.studentId === studentId) s.studentId = null; });
+  const seat = state.seats.find(s => s.id === seatId);
+  if (seat) seat.studentId = studentId;
+  render();
+}
+
+// ============ Student modal ============
+function openStudentModal(studentId) {
+  const s = state.students.find(x => x.id === studentId);
+  if (!s) return;
+  state.selectedStudentId = studentId;
+  document.getElementById('studentNameInput').value = s.name;
+  document.querySelectorAll('#studentGenderGroup .radio-pill').forEach(p => {
+    p.classList.toggle('active', p.dataset.gender === s.gender);
+  });
+  document.getElementById('studentModal').classList.add('show');
+  setTimeout(() => document.getElementById('studentNameInput').focus(), 100);
+}
+
+function closeStudentModal() {
+  document.getElementById('studentModal').classList.remove('show');
+  state.selectedStudentId = null;
+}
+
+function saveStudentModal() {
+  const s = state.students.find(x => x.id === state.selectedStudentId);
+  if (!s) { closeStudentModal(); return; }
+  const newName = document.getElementById('studentNameInput').value.trim();
+  if (!newName) { showToast('姓名不可為空'); return; }
+  s.name = newName;
+  const active = document.querySelector('#studentGenderGroup .radio-pill.active');
+  if (active) s.gender = active.dataset.gender;
+  closeStudentModal();
+  render();
+  showToast('已更新學員資訊');
+}
+
+document.getElementById('studentGenderGroup').addEventListener('click', e => {
+  const pill = e.target.closest('.radio-pill');
+  if (!pill) return;
+  document.querySelectorAll('#studentGenderGroup .radio-pill').forEach(p => p.classList.remove('active'));
+  pill.classList.add('active');
+});
+
+document.getElementById('studentModal').addEventListener('click', e => {
+  if (e.target.id === 'studentModal') closeStudentModal();
+});
+
+document.getElementById('studentNameInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') saveStudentModal();
+  if (e.key === 'Escape') closeStudentModal();
+});
+
+// ============ Seat modal ============
+function openSeatModal(seatId) {
+  state.selectedSeatId = seatId;
+  const seat = state.seats.find(s => s.id === seatId);
+  if (!seat) return;
+  const idx = state.seats.findIndex(s => s.id === seatId);
+  document.getElementById('modalSeatId').textContent = 'SEAT · ' + String(idx + 1).padStart(3, '0');
+
+  const select = document.getElementById('modalStudent');
+  const placedElsewhere = new Set(
+    state.seats.filter(s => s.id !== seatId && s.studentId).map(s => s.studentId)
+  );
+  select.innerHTML = '<option value="">— 空位 —</option>' +
+    state.students.map(s => {
+      const tag = placedElsewhere.has(s.id) ? ' (將從原座位移除)' : '';
+      const selected = s.id === seat.studentId ? 'selected' : '';
+      return `<option value="${s.id}" ${selected}>${escapeHtml(s.name)}${tag}</option>`;
+    }).join('');
+
+  document.querySelectorAll('#statusGroup .radio-pill').forEach(p => {
+    p.classList.toggle('active', p.dataset.status === seat.status);
+  });
+
+  document.getElementById('modalNote').value = seat.note || '';
+  document.getElementById('modalNewName').value = '';
+  document.getElementById('seatModal').classList.add('show');
+
+  setTimeout(() => {
+    if (!seat.studentId) document.getElementById('modalNewName').focus();
+  }, 100);
+}
+
+function quickAddAndAssign() {
+  const input = document.getElementById('modalNewName');
+  const name = input.value.trim();
+  if (!name) return;
+  const newStudent = { id: state.nextStudentId++, name, gender: state.quickGender };
+  state.students.push(newStudent);
+  const seat = state.seats.find(s => s.id === state.selectedSeatId);
+  if (seat) {
+    seat.studentId = newStudent.id;
+    const select = document.getElementById('modalStudent');
+    const opt = document.createElement('option');
+    opt.value = newStudent.id;
+    opt.textContent = name;
+    opt.selected = true;
+    select.appendChild(opt);
+  }
+  input.value = '';
+  showToast(`已新增「${name}」並指派至此座位`);
+}
+
+document.getElementById('quickGender').addEventListener('click', e => {
+  const btn = e.target.closest('button');
+  if (!btn) return;
+  document.querySelectorAll('#quickGender button').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  state.quickGender = btn.dataset.gender;
+});
+
+document.getElementById('statusGroup').addEventListener('click', e => {
+  const pill = e.target.closest('.radio-pill');
+  if (!pill) return;
+  document.querySelectorAll('#statusGroup .radio-pill').forEach(p => p.classList.remove('active'));
+  pill.classList.add('active');
+});
+
+function saveSeatModal() {
+  const seat = state.seats.find(s => s.id === state.selectedSeatId);
+  if (!seat) return;
+  const studentId = +document.getElementById('modalStudent').value || null;
+  if (studentId) {
+    state.seats.forEach(s => { if (s.studentId === studentId && s.id !== seat.id) s.studentId = null; });
+    seat.studentId = studentId;
+  } else {
+    seat.studentId = null;
+  }
+  const activeStatus = document.querySelector('#statusGroup .radio-pill.active');
+  seat.status = activeStatus ? activeStatus.dataset.status : 'present';
+  seat.note = document.getElementById('modalNote').value.trim();
+  closeModal();
+  render();
+}
+
+function removeSeat() {
+  if (!confirm('確定要移除此座位嗎？')) return;
+  deleteSeatDirectly(state.selectedSeatId);
+  closeModal();
+}
+
+function closeModal() {
+  document.getElementById('seatModal').classList.remove('show');
+  state.selectedSeatId = null;
+}
+
+document.getElementById('seatModal').addEventListener('click', e => {
+  if (e.target.id === 'seatModal') closeModal();
+});
+
+['sessionTitle', 'sessionDate', 'sessionLocation'].forEach(id => {
+  document.getElementById(id).addEventListener('input', renderStageMeta);
+});
+
+document.getElementById('sessionDate').valueAsDate = new Date();
+
+// ============ Keyboard shortcuts ============
+document.addEventListener('keydown', e => {
+  // 若使用者正在輸入框內，不攔截
+  if (e.target.matches('input, textarea')) return;
+
+  if (e.key === 'Escape') {
+    if (state.selectedSeatIds.size > 0) {
+      clearSelection();
+      e.preventDefault();
+    }
+  }
+  if (e.key === 'Delete' || e.key === 'Backspace') {
+    if (state.selectedSeatIds.size > 0) {
+      deleteSelected();
+      e.preventDefault();
+    }
+  }
+});
+
+// ============ Export ============
+async function exportPNG() {
+  const stage = document.getElementById('stage');
+  document.body.classList.add('exporting');
+  try {
+    const canvas = await html2canvas(stage, { backgroundColor: '#f5f1e8', scale: 2, logging: false });
+    const link = document.createElement('a');
+    link.download = getFilename() + '.png';
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+    showToast('已匯出 PNG');
+  } catch (err) {
+    alert('匯出失敗：' + err.message);
+  } finally {
+    document.body.classList.remove('exporting');
+  }
+}
+
+async function exportPDF() {
+  const stage = document.getElementById('stage');
+  document.body.classList.add('exporting');
+  try {
+    const canvas = await html2canvas(stage, { backgroundColor: '#f5f1e8', scale: 2, logging: false });
+    const imgData = canvas.toDataURL('image/png');
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF({ orientation: 'landscape', unit: 'pt', format: 'a4' });
+    const pageW = pdf.internal.pageSize.getWidth();
+    const pageH = pdf.internal.pageSize.getHeight();
+    const margin = 20;
+    const maxW = pageW - margin * 2;
+    const maxH = pageH - margin * 2;
+    const ratio = canvas.width / canvas.height;
+    let w = maxW, h = maxW / ratio;
+    if (h > maxH) { h = maxH; w = maxH * ratio; }
+    const x = (pageW - w) / 2;
+    const y = (pageH - h) / 2;
+    pdf.addImage(imgData, 'PNG', x, y, w, h);
+    pdf.save(getFilename() + '.pdf');
+    showToast('已匯出 PDF');
+  } catch (err) {
+    alert('匯出失敗：' + err.message);
+  } finally {
+    document.body.classList.remove('exporting');
+  }
+}
+
+function getFilename() {
+  const title = document.getElementById('sessionTitle').value.trim() || '座位圖';
+  const date = document.getElementById('sessionDate').value || new Date().toISOString().slice(0, 10);
+  return `${title}_${date}`.replace(/[\\/:*?"<>|]/g, '_');
+}
+
+// ============ Persistence ============
+function saveData() {
+  localStorage.setItem('seatingChart', JSON.stringify(serializeState()));
+  showToast('已儲存至瀏覽器');
+}
+
+function loadData() {
+  const raw = localStorage.getItem('seatingChart');
+  if (!raw) return;
+  try { applyState(JSON.parse(raw)); }
+  catch (e) { console.error('載入失敗', e); }
+}
+
+function serializeState() {
+  return {
+    layout: state.layout, rowCounts: state.rowCounts,
+    tableCounts: state.tableCounts, uShape: state.uShape,
+    students: state.students, seats: state.seats,
+    _tableLayout: state._tableLayout,
+    nextStudentId: state.nextStudentId, nextSeatId: state.nextSeatId,
+    layoutInitialized: state.layoutInitialized,
+    snapEnabled: state.snapEnabled, guideEnabled: state.guideEnabled,
+    spacingEnabled: state.spacingEnabled, gridVisible: state.gridVisible,
+    sessionTitle: document.getElementById('sessionTitle').value,
+    sessionDate: document.getElementById('sessionDate').value,
+    sessionLocation: document.getElementById('sessionLocation').value,
+  };
+}
+
+function applyState(data) {
+  Object.assign(state, {
+    layout: data.layout || 'lecture',
+    rowCounts: data.rowCounts || [5, 5, 5, 5],
+    tableCounts: data.tableCounts || [6, 6, 6, 6],
+    uShape: data.uShape || { left: 4, right: 4, bottom: 5, orientation: 'u' },
+    students: data.students || [],
+    seats: data.seats || [],
+    _tableLayout: data._tableLayout || [],
+    nextStudentId: data.nextStudentId || 1,
+    nextSeatId: data.nextSeatId || 1,
+    layoutInitialized: data.layoutInitialized || { lecture: false, group: false, ushape: false },
+    snapEnabled: data.snapEnabled !== undefined ? data.snapEnabled : true,
+    guideEnabled: data.guideEnabled !== undefined ? data.guideEnabled : true,
+    spacingEnabled: data.spacingEnabled !== undefined ? data.spacingEnabled : true,
+    gridVisible: data.gridVisible !== undefined ? data.gridVisible : true,
+  });
+  state.selectedSeatIds = new Set();
+  if (!state.uShape.orientation) state.uShape.orientation = 'u';
+  if (data.sessionTitle) document.getElementById('sessionTitle').value = data.sessionTitle;
+  if (data.sessionDate) document.getElementById('sessionDate').value = data.sessionDate;
+  if (data.sessionLocation) document.getElementById('sessionLocation').value = data.sessionLocation;
+
+  document.querySelectorAll('.layout-card').forEach(c => {
+    c.classList.toggle('active', c.dataset.layout === state.layout);
+  });
+  document.getElementById('snapToggle').classList.toggle('on', state.snapEnabled);
+  document.getElementById('guideToggle').classList.toggle('on', state.guideEnabled);
+  document.getElementById('spacingToggle').classList.toggle('on', state.spacingEnabled);
+  document.getElementById('gridToggle').classList.toggle('on', state.gridVisible);
+  renderLayoutConfig();
+  render();
+  renderStageMeta();
+}
+
+function exportJSON() {
+  const data = serializeState();
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.download = getFilename() + '.json';
+  link.href = url; link.click();
+  URL.revokeObjectURL(url);
+  showToast('已匯出 JSON');
+}
+
+function importJSON(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try { applyState(JSON.parse(e.target.result)); showToast('已匯入資料'); }
+    catch (err) { alert('匯入失敗：' + err.message); }
+  };
+  reader.readAsText(file);
+  event.target.value = '';
+}
+
+function clearAll() {
+  if (!confirm('確定要清除所有資料嗎？此操作無法復原。')) return;
+  state.students = [];
+  state.seats = [];
+  state.nextStudentId = 1;
+  state.nextSeatId = 1;
+  state.rowCounts = [5, 5, 5, 5];
+  state.tableCounts = [6, 6, 6, 6];
+  state.uShape = { left: 4, right: 4, bottom: 5, orientation: 'u' };
+  state.layoutInitialized = { lecture: false, group: false, ushape: false };
+  state.selectedSeatIds.clear();
+  if (state.layout !== 'free') initCurrentLayout();
+  render();
+  showToast('已清除');
+}
+
+function escapeHtml(str) {
+  return String(str).replace(/[&<>"']/g, c => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  }[c]));
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 1800);
+}
+
+function init() {
+  loadData();
+  renderLayoutConfig();
+  if (state.seats.length === 0 && state.layout !== 'free' && !state.layoutInitialized[state.layout]) {
+    initCurrentLayout();
+  }
+  render();
+}
+
+init();
+</script>
+</body>
+</html>
