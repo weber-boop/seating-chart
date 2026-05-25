@@ -68,31 +68,17 @@ body {
 }
 
 .brand { display: flex; align-items: baseline; gap: 12px; flex-shrink: 0; }
-
-.brand-title {
-  font-family: 'Noto Serif TC', serif;
-  font-size: 20px; font-weight: 600;
-  letter-spacing: 0.02em; color: var(--ink);
-}
-
-.brand-sub {
-  font-size: 12px; color: var(--ink-faint);
-  letter-spacing: 0.1em;
-  font-family: 'JetBrains Mono', monospace;
-  text-transform: uppercase;
-}
-
+.brand-title { font-family: 'Noto Serif TC', serif; font-size: 20px; font-weight: 600; letter-spacing: 0.02em; color: var(--ink); }
+.brand-sub { font-size: 12px; color: var(--ink-faint); letter-spacing: 0.1em; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; }
 .brand-bar { width: 32px; height: 2px; background: var(--accent); margin: 0 4px; }
 
 .session-meta { display: flex; gap: 12px; align-items: center; flex: 1; justify-content: center; }
-
 .session-meta input {
   border: none; border-bottom: 1px dashed var(--rule);
   background: transparent; padding: 4px 8px;
   font-family: inherit; font-size: 13px; color: var(--ink);
   outline: none; transition: border-color 0.2s; min-width: 100px;
 }
-
 .session-meta input:focus { border-bottom-color: var(--accent); }
 .session-meta input::placeholder { color: var(--ink-faint); }
 
@@ -107,22 +93,9 @@ body {
 .panel-section { padding: 18px 20px; border-bottom: 1px solid var(--rule); }
 .panel-section:last-child { border-bottom: none; }
 
-.section-title {
-  font-family: 'Noto Serif TC', serif;
-  font-size: 13px; font-weight: 600; color: var(--ink);
-  margin-bottom: 12px;
-  display: flex; align-items: center; gap: 8px;
-}
-
-.section-title::before {
-  content: ''; width: 3px; height: 14px;
-  background: var(--accent); display: inline-block;
-}
-
-.section-num {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 10px; color: var(--ink-faint); margin-left: auto;
-}
+.section-title { font-family: 'Noto Serif TC', serif; font-size: 13px; font-weight: 600; color: var(--ink); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+.section-title::before { content: ''; width: 3px; height: 14px; background: var(--accent); display: inline-block; }
+.section-num { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--ink-faint); margin-left: auto; }
 
 .btn {
   border: 1px solid var(--rule); background: var(--paper);
@@ -130,180 +103,98 @@ body {
   color: var(--ink); cursor: pointer; transition: all 0.18s ease;
   display: inline-flex; align-items: center; gap: 6px; border-radius: 2px;
 }
-
 .btn:hover { background: var(--paper-shade); border-color: var(--ink-faint); }
-
 .btn-primary { background: var(--ink); color: var(--paper); border-color: var(--ink); }
 .btn-primary:hover { background: var(--accent); border-color: var(--accent); color: var(--paper); }
-
 .btn-block { width: 100%; justify-content: center; }
 .btn-sm { padding: 4px 8px; font-size: 12px; }
 .btn-row { display: flex; gap: 6px; flex-wrap: wrap; }
 
 .tabs { display: flex; border-bottom: 1px solid var(--rule); margin-bottom: 12px; }
-
-.tab {
-  flex: 1; padding: 8px; font-size: 12px;
-  background: transparent; border: none;
-  color: var(--ink-faint); cursor: pointer;
-  border-bottom: 2px solid transparent; transition: all 0.15s;
-}
-
+.tab { flex: 1; padding: 8px; font-size: 12px; background: transparent; border: none; color: var(--ink-faint); cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.15s; }
 .tab.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 500; }
 .tab-content { display: none; }
 .tab-content.active { display: block; }
 
 .layout-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-
-.layout-card {
-  border: 1px solid var(--rule); background: var(--paper);
-  padding: 10px 8px; cursor: pointer; text-align: center;
-  transition: all 0.18s; border-radius: 2px;
-}
-
+.layout-card { border: 1px solid var(--rule); background: var(--paper); padding: 10px 8px; cursor: pointer; text-align: center; transition: all 0.18s; border-radius: 2px; }
 .layout-card:hover { border-color: var(--ink-faint); background: var(--paper-shade); }
 .layout-card.active { border-color: var(--accent); background: rgba(139, 58, 46, 0.06); }
-
 .layout-icon { display: block; margin: 0 auto 6px; color: var(--ink-soft); }
 .layout-card.active .layout-icon { color: var(--accent); }
 .layout-name { font-size: 11px; font-weight: 500; color: var(--ink); }
 
-.dir-toggle {
-  display: flex; border: 1px solid var(--rule);
-  border-radius: 2px; overflow: hidden; margin-bottom: 12px;
-}
-
-.dir-toggle button {
-  flex: 1; padding: 8px; background: var(--paper);
-  border: none; font-family: inherit; font-size: 12px;
-  color: var(--ink-soft); cursor: pointer; transition: all 0.15s;
-  display: flex; align-items: center; justify-content: center; gap: 6px;
-}
-
+.dir-toggle { display: flex; border: 1px solid var(--rule); border-radius: 2px; overflow: hidden; margin-bottom: 12px; }
+.dir-toggle button { flex: 1; padding: 8px; background: var(--paper); border: none; font-family: inherit; font-size: 12px; color: var(--ink-soft); cursor: pointer; transition: all 0.15s; display: flex; align-items: center; justify-content: center; gap: 6px; }
 .dir-toggle button + button { border-left: 1px solid var(--rule); }
 .dir-toggle button.active { background: var(--ink); color: var(--paper); }
 
 .unit-list { margin-top: 12px; }
-
-.unit-item {
-  display: flex; align-items: center; gap: 6px;
-  padding: 6px 8px; background: var(--paper-shade);
-  border: 1px solid var(--rule); border-radius: 2px; margin-bottom: 4px;
-}
-
+.unit-item { display: flex; align-items: center; gap: 6px; padding: 6px 8px; background: var(--paper-shade); border: 1px solid var(--rule); border-radius: 2px; margin-bottom: 4px; }
 .unit-label { font-size: 12px; color: var(--ink-soft); flex-shrink: 0; min-width: 38px; font-weight: 500; }
 .unit-count { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--ink); flex: 1; text-align: center; }
-
-.unit-btn {
-  width: 22px; height: 22px;
-  border: 1px solid var(--rule); background: var(--paper);
-  color: var(--ink-soft); cursor: pointer; border-radius: 2px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 14px; line-height: 1; padding: 0; transition: all 0.15s;
-}
-
+.unit-btn { width: 22px; height: 22px; border: 1px solid var(--rule); background: var(--paper); color: var(--ink-soft); cursor: pointer; border-radius: 2px; display: flex; align-items: center; justify-content: center; font-size: 14px; line-height: 1; padding: 0; transition: all 0.15s; }
 .unit-btn:hover { background: var(--ink); color: var(--paper); border-color: var(--ink); }
 .unit-btn.danger:hover { background: var(--accent); border-color: var(--accent); }
-
 .unit-add-row { display: flex; gap: 6px; margin-top: 8px; }
 .unit-add-row .btn { flex: 1; }
 
 .toggle-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
 .toggle-row label { font-size: 12px; color: var(--ink-soft); cursor: pointer; }
-
-.toggle {
-  position: relative; width: 34px; height: 18px;
-  background: var(--rule); border-radius: 9px;
-  cursor: pointer; transition: background 0.2s; flex-shrink: 0;
-}
-
-.toggle::after {
-  content: ''; position: absolute; top: 2px; left: 2px;
-  width: 14px; height: 14px; background: var(--paper);
-  border-radius: 50%; transition: transform 0.2s;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.2);
-}
-
+.toggle { position: relative; width: 34px; height: 18px; background: var(--rule); border-radius: 9px; cursor: pointer; transition: background 0.2s; flex-shrink: 0; }
+.toggle::after { content: ''; position: absolute; top: 2px; left: 2px; width: 14px; height: 14px; background: var(--paper); border-radius: 50%; transition: transform 0.2s; box-shadow: 0 1px 2px rgba(0,0,0,0.2); }
 .toggle.on { background: var(--accent); }
 .toggle.on::after { transform: translateX(16px); }
 
 .roster-add { display: flex; gap: 6px; margin-bottom: 8px; }
-
-.roster-add input {
-  flex: 1; padding: 6px 10px;
-  border: 1px solid var(--rule); background: var(--paper);
-  font-family: inherit; font-size: 13px; border-radius: 2px;
-}
-
+.roster-add input { flex: 1; padding: 6px 10px; border: 1px solid var(--rule); background: var(--paper); font-family: inherit; font-size: 13px; border-radius: 2px; }
 .roster-add input:focus { outline: none; border-color: var(--accent); }
 
-.bulk-area {
-  width: 100%; min-height: 90px; padding: 8px 10px;
-  border: 1px solid var(--rule); background: var(--paper);
-  font-family: inherit; font-size: 13px;
-  border-radius: 2px; resize: vertical; margin-bottom: 8px;
-}
-
+.bulk-area { width: 100%; min-height: 110px; padding: 8px 10px; border: 1px solid var(--rule); background: var(--paper); font-family: inherit; font-size: 13px; border-radius: 2px; resize: vertical; margin-bottom: 8px; }
 .bulk-area:focus { outline: none; border-color: var(--accent); }
 
-.gender-picker { display: flex; gap: 4px; margin-bottom: 12px; }
-
-.gender-btn {
-  flex: 1; padding: 5px; font-size: 11px;
-  border: 1px solid var(--rule); background: var(--paper);
-  cursor: pointer; color: var(--ink-soft);
-  border-radius: 2px; transition: all 0.18s;
+.bulk-syntax-hint {
+  background: var(--paper-shade);
+  border-left: 3px solid var(--accent);
+  padding: 8px 10px;
+  margin-bottom: 8px;
+  font-size: 11px;
+  color: var(--ink-soft);
+  line-height: 1.6;
+  border-radius: 2px;
+}
+.bulk-syntax-hint code {
+  background: var(--paper);
+  padding: 1px 4px;
+  border-radius: 2px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--ink);
 }
 
+.gender-picker { display: flex; gap: 4px; margin-bottom: 12px; }
+.gender-btn { flex: 1; padding: 5px; font-size: 11px; border: 1px solid var(--rule); background: var(--paper); cursor: pointer; color: var(--ink-soft); border-radius: 2px; transition: all 0.18s; }
 .gender-btn.active { background: var(--ink); color: var(--paper); border-color: var(--ink); }
 
 .roster-list { list-style: none; max-height: 260px; overflow-y: auto; }
-
-.roster-item {
-  display: flex; align-items: center; gap: 8px;
-  padding: 8px 10px; border: 1px solid var(--rule);
-  margin-bottom: 4px; border-radius: 2px;
-  cursor: grab; background: var(--paper);
-  transition: all 0.15s; user-select: none;
-}
-
+.roster-item { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border: 1px solid var(--rule); margin-bottom: 4px; border-radius: 2px; cursor: grab; background: var(--paper); transition: all 0.15s; user-select: none; }
 .roster-item:hover { background: var(--paper-shade); border-color: var(--ink-faint); }
 .roster-item.placed { opacity: 0.5; background: var(--paper-shade); }
 .roster-item.dragging { opacity: 0.4; cursor: grabbing; }
 
-.gender-badge {
-  width: 20px; height: 20px; border-radius: 50%; flex-shrink: 0;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 12px; font-weight: 700; color: white;
-  cursor: pointer; transition: transform 0.12s;
-  border: 2px solid transparent;
-}
-
+.gender-badge { width: 20px; height: 20px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: white; cursor: pointer; transition: transform 0.12s; border: 2px solid transparent; }
 .gender-badge:hover { transform: scale(1.15); border-color: var(--ink-faint); }
 .gender-badge.f { background: var(--female); }
 .gender-badge.m { background: var(--male); }
 .gender-badge.u { background: var(--unknown); }
 
-.roster-name {
-  flex: 1; font-size: 13px; color: var(--ink);
-  cursor: text; padding: 2px 4px;
-  border-radius: 2px; transition: background 0.15s;
-}
-
+.roster-name { flex: 1; font-size: 13px; color: var(--ink); cursor: text; padding: 2px 4px; border-radius: 2px; transition: background 0.15s; }
 .roster-name:hover { background: var(--paper-shade); }
 
-.roster-remove {
-  border: none; background: transparent;
-  color: var(--ink-faint); cursor: pointer;
-  padding: 2px 4px; font-size: 14px; line-height: 1;
-}
-
+.roster-remove { border: none; background: transparent; color: var(--ink-faint); cursor: pointer; padding: 2px 4px; font-size: 14px; line-height: 1; }
 .roster-remove:hover { color: var(--accent); }
 
-.roster-empty {
-  text-align: center; padding: 20px 10px;
-  color: var(--ink-faint); font-size: 12px; font-style: italic;
-}
+.roster-empty { text-align: center; padding: 20px 10px; color: var(--ink-faint); font-size: 12px; font-style: italic; }
 
 .stage-wrap {
   position: relative; overflow: auto;
@@ -313,297 +204,101 @@ body {
     var(--paper);
 }
 
-.stage {
-  position: relative; width: 1200px; height: 800px;
-  margin: 20px auto; background: var(--paper);
-  border: 1px solid var(--rule); box-shadow: var(--shadow);
-}
-
-.stage-header {
-  position: absolute; top: 0; left: 0; right: 0;
-  padding: 16px 24px; border-bottom: 1px dashed var(--rule);
-  display: flex; justify-content: space-between; align-items: center;
-  background: var(--paper); font-family: 'Noto Serif TC', serif;
-}
-
+.stage { position: relative; width: 1200px; height: 800px; margin: 20px auto; background: var(--paper); border: 1px solid var(--rule); box-shadow: var(--shadow); }
+.stage-header { position: absolute; top: 0; left: 0; right: 0; padding: 16px 24px; border-bottom: 1px dashed var(--rule); display: flex; justify-content: space-between; align-items: center; background: var(--paper); font-family: 'Noto Serif TC', serif; }
 .stage-title { font-size: 16px; font-weight: 600; color: var(--ink); }
+.stage-meta { font-size: 12px; color: var(--ink-faint); font-family: 'JetBrains Mono', monospace; letter-spacing: 0.05em; }
 
-.stage-meta {
-  font-size: 12px; color: var(--ink-faint);
-  font-family: 'JetBrains Mono', monospace; letter-spacing: 0.05em;
-}
-
-.podium {
-  position: absolute; top: 70px; left: 50%;
-  transform: translateX(-50%);
-  width: 200px; height: 36px;
-  background: var(--ink); color: var(--paper);
-  display: flex; align-items: center; justify-content: center;
-  font-family: 'Noto Serif TC', serif;
-  font-size: 13px; letter-spacing: 0.3em;
-  border-radius: 2px; z-index: 2;
-}
-
-.podium::before, .podium::after {
-  content: ''; position: absolute; top: 50%;
-  width: 60px; height: 1px; background: var(--ink);
-}
-
+.podium { position: absolute; top: 70px; left: 50%; transform: translateX(-50%); width: 200px; height: 36px; background: var(--ink); color: var(--paper); display: flex; align-items: center; justify-content: center; font-family: 'Noto Serif TC', serif; font-size: 13px; letter-spacing: 0.3em; border-radius: 2px; z-index: 2; }
+.podium::before, .podium::after { content: ''; position: absolute; top: 50%; width: 60px; height: 1px; background: var(--ink); }
 .podium::before { left: -70px; }
 .podium::after { right: -70px; }
 
-.podium-axis {
-  position: absolute; top: 70px; bottom: 24px;
-  left: 50%; width: 0;
-  border-left: 1px dashed rgba(139, 58, 46, 0.12);
-  pointer-events: none; z-index: 0;
-}
+.podium-axis { position: absolute; top: 70px; bottom: 24px; left: 50%; width: 0; border-left: 1px dashed rgba(139, 58, 46, 0.12); pointer-events: none; z-index: 0; }
 
-.layout-area {
-  position: absolute; top: 130px;
-  left: 24px; right: 24px; bottom: 24px;
-}
+.layout-area { position: absolute; top: 130px; left: 24px; right: 24px; bottom: 24px; }
+.layout-area.show-grid { background-image: radial-gradient(circle, var(--rule) 0.8px, transparent 1px); background-size: 12px 12px; background-position: 0 0; }
 
-.layout-area.show-grid {
-  background-image: radial-gradient(circle, var(--rule) 0.8px, transparent 1px);
-  background-size: 12px 12px; background-position: 0 0;
-}
-
-/* Selection box（框選） */
-.selection-box {
-  position: absolute;
-  border: 1.5px dashed var(--selected);
-  background: rgba(45, 107, 168, 0.08);
-  pointer-events: none;
-  z-index: 40;
-  display: none;
-}
-
+.selection-box { position: absolute; border: 1.5px dashed var(--selected); background: rgba(45, 107, 168, 0.08); pointer-events: none; z-index: 40; display: none; }
 .selection-box.show { display: block; }
 
-.align-guide {
-  position: absolute; background: var(--align);
-  pointer-events: none; z-index: 50;
-  opacity: 0; transition: opacity 0.08s;
-}
-
+.align-guide { position: absolute; background: var(--align); pointer-events: none; z-index: 50; opacity: 0; transition: opacity 0.08s; }
 .align-guide.show { opacity: 0.85; }
-.align-guide.vertical {
-  width: 1px;
-  background-image: linear-gradient(to bottom, var(--align) 50%, transparent 50%);
-  background-size: 1px 6px;
-}
-.align-guide.horizontal {
-  height: 1px;
-  background-image: linear-gradient(to right, var(--align) 50%, transparent 50%);
-  background-size: 6px 1px;
-}
+.align-guide.vertical { width: 1px; background-image: linear-gradient(to bottom, var(--align) 50%, transparent 50%); background-size: 1px 6px; }
+.align-guide.horizontal { height: 1px; background-image: linear-gradient(to right, var(--align) 50%, transparent 50%); background-size: 6px 1px; }
 
 .spacing-indicator { position: absolute; pointer-events: none; z-index: 51; opacity: 0; transition: opacity 0.1s; }
 .spacing-indicator.show { opacity: 1; }
 .spacing-indicator .line { position: absolute; background: var(--equal); }
 .spacing-indicator .cap { position: absolute; background: var(--equal); }
 
-.spacing-label {
-  position: absolute; background: var(--equal); color: white;
-  font-family: 'JetBrains Mono', monospace; font-size: 10px;
-  padding: 1px 5px; border-radius: 2px;
-  white-space: nowrap; transform: translate(-50%, -50%);
-}
+.spacing-label { position: absolute; background: var(--equal); color: white; font-family: 'JetBrains Mono', monospace; font-size: 10px; padding: 1px 5px; border-radius: 2px; white-space: nowrap; transform: translate(-50%, -50%); }
 
-.seat {
-  position: absolute; width: 78px; height: 84px;
-  border: 1.5px solid var(--rule); background: var(--paper);
-  border-radius: 4px; display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  padding: 4px; cursor: pointer;
-  transition: border-color 0.18s, box-shadow 0.18s, opacity 0.18s;
-  user-select: none;
-}
-
+.seat { position: absolute; width: 78px; height: 84px; border: 1.5px solid var(--rule); background: var(--paper); border-radius: 4px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 4px; cursor: pointer; transition: border-color 0.18s, box-shadow 0.18s, opacity 0.18s; user-select: none; }
 .seat.draggable-mode { cursor: move; }
 .seat:hover { border-color: var(--ink-faint); box-shadow: var(--shadow); z-index: 5; }
-
-.seat.dragging {
-  z-index: 100; box-shadow: var(--shadow-lift);
-  transition: none; cursor: grabbing; opacity: 0.92;
-}
-
-.seat.drop-target {
-  background: rgba(139, 58, 46, 0.08);
-  border-color: var(--accent); border-style: dashed;
-}
-
-.seat.swap-target {
-  background: rgba(107, 78, 158, 0.14);
-  border-color: var(--swap);
-  border-style: dashed;
-  border-width: 2.5px !important;
-  box-shadow: 0 0 0 2px rgba(107, 78, 158, 0.18);
-}
-
-.seat.multi-selected {
-  box-shadow: 0 0 0 2px var(--selected), var(--shadow);
-}
-
+.seat.dragging { z-index: 100; box-shadow: var(--shadow-lift); transition: none; cursor: grabbing; opacity: 0.92; }
+.seat.drop-target { background: rgba(139, 58, 46, 0.08); border-color: var(--accent); border-style: dashed; }
+.seat.swap-target { background: rgba(107, 78, 158, 0.14); border-color: var(--swap); border-style: dashed; border-width: 2.5px !important; box-shadow: 0 0 0 2px rgba(107, 78, 158, 0.18); }
+.seat.multi-selected { box-shadow: 0 0 0 2px var(--selected), var(--shadow); }
 .seat.occupied { border-color: var(--ink-soft); }
 .seat.occupied.f { background: var(--female-bg); border-color: var(--female-border); border-width: 2px; }
 .seat.occupied.m { background: var(--male-bg); border-color: var(--male-border); border-width: 2px; }
 .seat.occupied.u { background: var(--unknown-bg); border-color: var(--unknown-border); border-width: 2px; }
-
 .seat.absent { opacity: 0.5; }
 .seat.absent .seat-name { text-decoration: line-through; }
 .seat.late { border-style: dashed; }
 
-.seat-num {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 9px; color: var(--ink-faint);
-  position: absolute; top: 4px; left: 6px;
-  letter-spacing: 0.05em;
-}
+.seat-num { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--ink-faint); position: absolute; top: 4px; left: 6px; letter-spacing: 0.05em; }
 
-.seat-gender-icon {
-  position: absolute; top: 4px; left: 50%;
-  transform: translateX(-50%);
-  width: 20px; height: 20px; border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 13px; font-weight: 700; color: white; line-height: 1;
-  cursor: pointer;
-  transition: transform 0.12s, box-shadow 0.12s;
-  border: 2px solid transparent;
-}
-
-.seat-gender-icon:hover {
-  transform: translateX(-50%) scale(1.18);
-  border-color: white;
-  box-shadow: 0 0 0 2px var(--ink-soft), var(--shadow);
-}
-
+.seat-gender-icon { position: absolute; top: 4px; left: 50%; transform: translateX(-50%); width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: white; line-height: 1; cursor: pointer; transition: transform 0.12s, box-shadow 0.12s; border: 2px solid transparent; }
+.seat-gender-icon:hover { transform: translateX(-50%) scale(1.18); border-color: white; box-shadow: 0 0 0 2px var(--ink-soft), var(--shadow); }
 .seat-gender-icon.f { background: var(--female); }
 .seat-gender-icon.m { background: var(--male); }
 .seat-gender-icon.u { background: var(--unknown); }
 
-.seat-name {
-  font-size: 13px; font-weight: 600; color: var(--ink);
-  text-align: center; line-height: 1.2;
-  margin-top: 22px; word-break: keep-all;
-  max-width: 100%; overflow: hidden;
-}
-
+.seat-name { font-size: 13px; font-weight: 600; color: var(--ink); text-align: center; line-height: 1.2; margin-top: 22px; word-break: keep-all; max-width: 100%; overflow: hidden; }
 .seat-empty-label { font-size: 11px; color: var(--ink-faint); font-style: italic; }
 
-.seat-status {
-  position: absolute; bottom: 4px; right: 4px;
-  font-size: 9px; font-family: 'JetBrains Mono', monospace;
-  padding: 1px 4px; border-radius: 2px;
-  background: var(--paper-shade); color: var(--ink-soft);
-  letter-spacing: 0.05em;
-}
-
+.seat-status { position: absolute; bottom: 4px; right: 4px; font-size: 9px; font-family: 'JetBrains Mono', monospace; padding: 1px 4px; border-radius: 2px; background: var(--paper-shade); color: var(--ink-soft); letter-spacing: 0.05em; }
 .seat-status.present { background: rgba(90, 138, 74, 0.18); color: var(--present); }
 .seat-status.late { background: rgba(212, 160, 74, 0.22); color: #8a6420; }
 .seat-status.absent { background: rgba(184, 85, 64, 0.18); color: var(--absent); }
 
-.seat-special {
-  position: absolute; bottom: 4px; left: 4px;
-  width: 14px; height: 14px; border-radius: 50%;
-  background: var(--special); color: white;
-  font-size: 9px; display: flex;
-  align-items: center; justify-content: center; font-weight: 600;
-}
-
-.seat-quick-del {
-  position: absolute; top: -8px; right: -8px;
-  width: 20px; height: 20px; border-radius: 50%;
-  background: var(--accent); color: white;
-  font-size: 12px; line-height: 20px; text-align: center;
-  cursor: pointer; opacity: 0; transition: opacity 0.15s;
-  z-index: 10; border: 2px solid var(--paper);
-  box-shadow: var(--shadow); font-weight: 600;
-}
-
+.seat-special { position: absolute; bottom: 4px; left: 4px; width: 14px; height: 14px; border-radius: 50%; background: var(--special); color: white; font-size: 9px; display: flex; align-items: center; justify-content: center; font-weight: 600; }
+.seat-quick-del { position: absolute; top: -8px; right: -8px; width: 20px; height: 20px; border-radius: 50%; background: var(--accent); color: white; font-size: 12px; line-height: 20px; text-align: center; cursor: pointer; opacity: 0; transition: opacity 0.15s; z-index: 10; border: 2px solid var(--paper); box-shadow: var(--shadow); font-weight: 600; }
 .seat:hover .seat-quick-del { opacity: 1; }
 .seat-quick-del:hover { background: #6b2a23; }
 
-.round-table {
-  position: absolute; border-radius: 50%;
-  background: var(--paper-shade); border: 2px solid var(--rule);
-  display: flex; align-items: center; justify-content: center;
-  font-family: 'Noto Serif TC', serif;
-  color: var(--ink-soft); font-size: 14px;
-  font-weight: 500; pointer-events: none;
-}
+.round-table { position: absolute; border-radius: 50%; background: var(--paper-shade); border: 2px solid var(--rule); display: flex; align-items: center; justify-content: center; font-family: 'Noto Serif TC', serif; color: var(--ink-soft); font-size: 14px; font-weight: 500; pointer-events: none; }
 
-.modal-backdrop {
-  position: fixed; inset: 0;
-  background: rgba(43, 36, 25, 0.4); backdrop-filter: blur(2px);
-  display: none; align-items: center; justify-content: center; z-index: 100;
-}
-
+.modal-backdrop { position: fixed; inset: 0; background: rgba(43, 36, 25, 0.4); backdrop-filter: blur(2px); display: none; align-items: center; justify-content: center; z-index: 100; }
 .modal-backdrop.show { display: flex; }
-
-.modal {
-  background: var(--paper); border: 1px solid var(--rule);
-  width: 420px; max-width: 92vw;
-  box-shadow: var(--shadow-lift); border-radius: 4px; overflow: hidden;
-}
-
+.modal { background: var(--paper); border: 1px solid var(--rule); width: 420px; max-width: 92vw; box-shadow: var(--shadow-lift); border-radius: 4px; overflow: hidden; }
 .modal-header { padding: 18px 22px 14px; border-bottom: 1px solid var(--rule); }
-
-.modal-title {
-  font-family: 'Noto Serif TC', serif;
-  font-size: 16px; font-weight: 600; color: var(--ink); margin-bottom: 4px;
-}
-
+.modal-title { font-family: 'Noto Serif TC', serif; font-size: 16px; font-weight: 600; color: var(--ink); margin-bottom: 4px; }
 .modal-sub { font-size: 12px; color: var(--ink-faint); font-family: 'JetBrains Mono', monospace; }
-
 .modal-body { padding: 18px 22px; }
 
 .field { margin-bottom: 16px; }
-
 .field-label { display: block; font-size: 12px; color: var(--ink-soft); margin-bottom: 6px; font-weight: 500; }
-
-.field input, .field textarea, .field select {
-  width: 100%; padding: 8px 10px;
-  border: 1px solid var(--rule); background: var(--paper);
-  font-family: inherit; font-size: 13px; color: var(--ink); border-radius: 2px;
-}
-
+.field input, .field textarea, .field select { width: 100%; padding: 8px 10px; border: 1px solid var(--rule); background: var(--paper); font-family: inherit; font-size: 13px; color: var(--ink); border-radius: 2px; }
 .field input:focus, .field textarea:focus, .field select:focus { outline: none; border-color: var(--accent); }
 .field textarea { resize: vertical; min-height: 60px; }
 
 .assign-divider { text-align: center; font-size: 11px; color: var(--ink-faint); margin: 8px 0; position: relative; }
-
-.assign-divider::before, .assign-divider::after {
-  content: ''; position: absolute; top: 50%;
-  width: calc(50% - 20px); height: 1px; background: var(--rule);
-}
-
+.assign-divider::before, .assign-divider::after { content: ''; position: absolute; top: 50%; width: calc(50% - 20px); height: 1px; background: var(--rule); }
 .assign-divider::before { left: 0; }
 .assign-divider::after { right: 0; }
 
 .quick-add-row { display: flex; gap: 6px; align-items: center; }
 .quick-add-row input { flex: 1; }
-
 .quick-gender { display: flex; gap: 2px; }
-
-.quick-gender button {
-  border: 1px solid var(--rule); background: var(--paper);
-  padding: 6px 8px; font-size: 11px; cursor: pointer;
-  border-radius: 2px; color: var(--ink-soft);
-}
-
+.quick-gender button { border: 1px solid var(--rule); background: var(--paper); padding: 6px 8px; font-size: 11px; cursor: pointer; border-radius: 2px; color: var(--ink-soft); }
 .quick-gender button.active { background: var(--ink); color: var(--paper); border-color: var(--ink); }
 
 .radio-group { display: flex; gap: 6px; flex-wrap: wrap; }
-
-.radio-pill {
-  flex: 1; min-width: 60px;
-  border: 1px solid var(--rule); background: var(--paper);
-  padding: 8px; text-align: center; font-size: 12px;
-  cursor: pointer; border-radius: 2px; transition: all 0.18s;
-}
-
+.radio-pill { flex: 1; min-width: 60px; border: 1px solid var(--rule); background: var(--paper); padding: 8px; text-align: center; font-size: 12px; cursor: pointer; border-radius: 2px; transition: all 0.18s; }
 .radio-pill.active { background: var(--ink); color: var(--paper); border-color: var(--ink); }
 .radio-pill[data-status="present"].active { background: var(--present); border-color: var(--present); }
 .radio-pill[data-status="late"].active { background: var(--late); border-color: var(--late); }
@@ -612,102 +307,37 @@ body {
 .radio-pill[data-gender="m"].active { background: var(--male); border-color: var(--male); }
 .radio-pill[data-gender="u"].active { background: var(--unknown); border-color: var(--unknown); }
 
-.modal-footer {
-  display: flex; justify-content: space-between;
-  padding: 14px 22px; background: var(--paper-shade);
-  border-top: 1px solid var(--rule);
-}
-
+.modal-footer { display: flex; justify-content: space-between; padding: 14px 22px; background: var(--paper-shade); border-top: 1px solid var(--rule); }
 .modal-footer-right { display: flex; gap: 8px; }
 
 .legend-item { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; font-size: 12px; color: var(--ink-soft); }
 .legend-swatch { width: 16px; height: 16px; border-radius: 2px; flex-shrink: 0; }
-
-.legend-gender {
-  width: 18px; height: 18px; border-radius: 50%;
-  flex-shrink: 0; display: flex;
-  align-items: center; justify-content: center;
-  color: white; font-size: 11px; font-weight: 700;
-}
+.legend-gender { width: 18px; height: 18px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; color: white; font-size: 11px; font-weight: 700; }
 
 .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 .stat { padding: 10px; background: var(--paper-shade); border-radius: 2px; text-align: center; }
 .stat-num { font-family: 'Noto Serif TC', serif; font-size: 22px; font-weight: 600; color: var(--ink); line-height: 1; }
-
-.stat-label {
-  font-size: 10px; color: var(--ink-faint);
-  text-transform: uppercase; letter-spacing: 0.1em; margin-top: 4px;
-}
+.stat-label { font-size: 10px; color: var(--ink-faint); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 4px; }
 
 ::-webkit-scrollbar { width: 8px; height: 8px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--rule); border-radius: 4px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--ink-faint); }
 
-.help-text {
-  font-size: 11px; color: var(--ink-faint);
-  margin-top: 6px; line-height: 1.5; font-style: italic;
-}
+.help-text { font-size: 11px; color: var(--ink-faint); margin-top: 6px; line-height: 1.5; font-style: italic; }
 
-/* Multi-select toolbar */
-.multi-toolbar {
-  position: fixed;
-  top: 80px; left: 50%;
-  transform: translateX(-50%);
-  background: var(--ink);
-  color: var(--paper);
-  border-radius: 4px;
-  padding: 8px 14px;
-  display: none;
-  align-items: center;
-  gap: 12px;
-  z-index: 150;
-  box-shadow: var(--shadow-lift);
-  font-size: 13px;
-}
-
+.multi-toolbar { position: fixed; top: 80px; left: 50%; transform: translateX(-50%); background: var(--ink); color: var(--paper); border-radius: 4px; padding: 8px 14px; display: none; align-items: center; gap: 12px; z-index: 150; box-shadow: var(--shadow-lift); font-size: 13px; }
 .multi-toolbar.show { display: flex; }
-
-.multi-toolbar-count {
-  background: rgba(255,255,255,0.15);
-  padding: 2px 8px;
-  border-radius: 12px;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 12px;
-}
-
-.multi-toolbar button {
-  background: transparent;
-  border: 1px solid rgba(255,255,255,0.3);
-  color: var(--paper);
-  padding: 4px 10px;
-  font-size: 12px;
-  border-radius: 2px;
-  cursor: pointer;
-  font-family: inherit;
-}
-
+.multi-toolbar-count { background: rgba(255,255,255,0.15); padding: 2px 8px; border-radius: 12px; font-family: 'JetBrains Mono', monospace; font-size: 12px; }
+.multi-toolbar button { background: transparent; border: 1px solid rgba(255,255,255,0.3); color: var(--paper); padding: 4px 10px; font-size: 12px; border-radius: 2px; cursor: pointer; font-family: inherit; }
 .multi-toolbar button:hover { background: rgba(255,255,255,0.12); }
 .multi-toolbar button.danger { color: #ffb3a8; border-color: rgba(255,179,168,0.4); }
 .multi-toolbar button.danger:hover { background: rgba(255,100,80,0.18); }
 
-.toast {
-  position: fixed; bottom: 24px; left: 50%;
-  transform: translateX(-50%) translateY(20px);
-  background: var(--ink); color: var(--paper);
-  padding: 10px 18px; border-radius: 2px;
-  font-size: 13px; box-shadow: var(--shadow-lift);
-  opacity: 0; transition: all 0.25s ease;
-  z-index: 200; pointer-events: none;
-}
-
+.toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--ink); color: var(--paper); padding: 10px 18px; border-radius: 2px; font-size: 13px; box-shadow: var(--shadow-lift); opacity: 0; transition: all 0.25s ease; z-index: 200; pointer-events: none; }
 .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-.exporting .align-guide,
-.exporting .spacing-indicator,
-.exporting .selection-box,
-.exporting .multi-toolbar,
-.exporting .podium-axis { display: none !important; }
+.exporting .align-guide, .exporting .spacing-indicator, .exporting .selection-box, .exporting .multi-toolbar, .exporting .podium-axis { display: none !important; }
 .exporting .layout-area.show-grid { background-image: none !important; }
 .exporting .seat:hover { box-shadow: none; }
 .exporting .seat-quick-del { display: none !important; }
@@ -791,7 +421,7 @@ body {
 
         <div class="tab-content active" id="tab-single">
           <div class="roster-add">
-            <input type="text" id="newName" placeholder="輸入姓名" onkeydown="if(event.key==='Enter')addStudent()">
+            <input type="text" id="newName" placeholder="輸入姓名">
             <button class="btn btn-primary" onclick="addStudent()">＋</button>
           </div>
           <div class="gender-picker" id="genderPicker">
@@ -802,11 +432,18 @@ body {
         </div>
 
         <div class="tab-content" id="tab-bulk">
+          <div class="bulk-syntax-hint">
+            可在姓名前後加上性別標記：<br>
+            <code>王小明 男</code> 或 <code>王小明 M</code><br>
+            <code>李美麗 女</code> 或 <code>李美麗 F</code><br>
+            沒標記的會用下方「預設性別」
+          </div>
           <textarea class="bulk-area" id="bulkInput"
-            placeholder="一行一個姓名，例如：&#10;王小明&#10;李美麗&#10;陳大華"></textarea>
+            placeholder="一行一個姓名，可加性別標記：&#10;王小明 男&#10;李美麗 女&#10;陳大華&#10;張小芳 F&#10;林志明 M"></textarea>
+          <div style="margin-bottom:6px;font-size:11px;color:var(--ink-soft)">未標記者的預設性別：</div>
           <div class="gender-picker">
-            <button class="gender-btn active" data-bulk-gender="f">全標女</button>
-            <button class="gender-btn" data-bulk-gender="m">全標男</button>
+            <button class="gender-btn active" data-bulk-gender="f">女</button>
+            <button class="gender-btn" data-bulk-gender="m">男</button>
             <button class="gender-btn" data-bulk-gender="u">未指定</button>
           </div>
           <button class="btn btn-primary btn-block" onclick="bulkAddStudents()">批量加入名單</button>
@@ -814,10 +451,9 @@ body {
 
         <p class="help-text" style="margin-top:10px">
           • 拖名字到座位 = 指派<br>
-          • 點性別圖示（名單或座位上）= 切換性別<br>
+          • 點性別圖示 = 切換性別<br>
           • 點姓名 = 編輯<br>
-          • 自由配置中：空白處按住拖曳 = 框選座位<br>
-          • Ctrl/Cmd + 點座位 = 加入選取
+          • 自由配置中：空白處拖動 = 框選座位
         </p>
         <ul class="roster-list" id="rosterList"></ul>
       </div>
@@ -852,7 +488,7 @@ body {
           • <strong>拖曳座位</strong>：拖到另一座位 → 互換；自由配置中拖到空白 → 移動<br>
           • <strong>框選</strong>：自由配置中，空白處拖出框框 → 多選<br>
           • <strong>Ctrl/Cmd + 點擊</strong>：加入或移除選取<br>
-          • <strong>整組拖動</strong>：選取多個後拖動其中一個 → 整組一起移動<br>
+          • <strong>整組拖動</strong>：選取多個後拖動其中一個 → 整組一起移動，並顯示對齊輔助線<br>
           • <strong>Delete 鍵</strong>：刪除已選取的座位<br>
           • <strong>Esc 鍵</strong>：取消選取
         </p>
@@ -905,14 +541,12 @@ body {
   </main>
 </div>
 
-<!-- Multi-select toolbar -->
 <div class="multi-toolbar" id="multiToolbar">
   <span>已選取 <span class="multi-toolbar-count" id="multiCount">0</span> 個座位</span>
   <button onclick="deleteSelected()" class="danger">刪除選取</button>
   <button onclick="clearSelection()">取消選取</button>
 </div>
 
-<!-- Seat modal -->
 <div class="modal-backdrop" id="seatModal">
   <div class="modal">
     <div class="modal-header">
@@ -931,7 +565,7 @@ body {
 
       <div class="field">
         <div class="quick-add-row">
-          <input type="text" id="modalNewName" placeholder="輸入新學員姓名" onkeydown="if(event.key==='Enter')quickAddAndAssign()">
+          <input type="text" id="modalNewName" placeholder="輸入新學員姓名">
           <div class="quick-gender" id="quickGender">
             <button data-gender="f" class="active">女</button>
             <button data-gender="m">男</button>
@@ -964,7 +598,6 @@ body {
   </div>
 </div>
 
-<!-- Student modal -->
 <div class="modal-backdrop" id="studentModal">
   <div class="modal">
     <div class="modal-header">
@@ -997,7 +630,6 @@ body {
 <div class="toast" id="toast">已儲存</div>
 
 <script>
-// ============ Constants ============
 const SEAT_W = 78;
 const SEAT_H = 84;
 const STAGE_W = 1200;
@@ -1007,7 +639,6 @@ const AREA_H = STAGE_H - 130 - 24;
 const PODIUM_CENTER_X = (STAGE_W / 2) - 24;
 const DRAG_THRESHOLD = 4;
 
-// ============ State ============
 const state = {
   layout: 'lecture',
   rowCounts: [5, 5, 5, 5],
@@ -1020,7 +651,7 @@ const state = {
   quickGender: 'f',
   selectedSeatId: null,
   selectedStudentId: null,
-  selectedSeatIds: new Set(), // 多選的座位 ID 集合
+  selectedSeatIds: new Set(),
   nextStudentId: 1,
   nextSeatId: 1,
   rosterTab: 'single',
@@ -1037,6 +668,28 @@ const state = {
 const GENDER_ICON = { f: '♀', m: '♂', u: '·' };
 const GENDER_ORDER = ['f', 'm', 'u'];
 
+// ============ IME-safe Enter handler ============
+// 解決中文輸入法選字時按 Enter 誤觸發送出的問題
+function safeEnterHandler(input, callback) {
+  let isComposing = false;
+
+  input.addEventListener('compositionstart', () => { isComposing = true; });
+  input.addEventListener('compositionend', () => {
+    // compositionend 後可能緊接著 keydown，給一點延遲讓 isComposing 真正回到 false
+    setTimeout(() => { isComposing = false; }, 10);
+  });
+
+  input.addEventListener('keydown', e => {
+    if (e.key !== 'Enter') return;
+    // 多重檢查：isComposing flag、event.isComposing、keyCode 229
+    if (isComposing || e.isComposing || e.keyCode === 229) {
+      return; // 正在組字，忽略
+    }
+    e.preventDefault();
+    callback();
+  });
+}
+
 function centerSeatsHorizontally(seats) {
   if (seats.length === 0) return;
   const minX = Math.min(...seats.map(s => s.x));
@@ -1046,7 +699,6 @@ function centerSeatsHorizontally(seats) {
   seats.forEach(s => { s.x += dx; });
 }
 
-// ============ Initial layouts ============
 function initLectureLayout() {
   state.seats = [];
   const maxCols = Math.max(...state.rowCounts, 1);
@@ -1104,12 +756,10 @@ function initGroupLayout() {
   state.layoutInitialized.group = true;
 }
 
-// U / ㄇ 字型：底部緊貼兩側座位
 function initUShapeLayout() {
   state.seats = [];
   const { left, right, bottom, orientation } = state.uShape;
   const sideMax = Math.max(left, right, 1);
-  // 縮小兩側間距，整體更緊湊
   const sideSpacing = Math.min(95, (AREA_H - 200) / Math.max(sideMax, 1));
   const horizontalCount = Math.max(bottom, 1);
   const horizontalSpacing = horizontalCount > 1 ? Math.min(100, (AREA_W - 280) / (horizontalCount - 1)) : 0;
@@ -1117,10 +767,9 @@ function initUShapeLayout() {
   const horizontalStartX = PODIUM_CENTER_X - horizontalWidth / 2 - SEAT_W / 2;
   const leftX = horizontalStartX - 20;
   const rightX = horizontalStartX + horizontalWidth + 20;
-  const gapToSide = 12; // 底部/頂部與兩側座位之間的垂直間距
+  const gapToSide = 12;
 
   if (orientation === 'u') {
-    // U 字：兩側座位由上往下排，底部緊貼兩側最下方
     const sideStartY = 60;
     for (let i = 0; i < left; i++) {
       state.seats.push({ id: state.nextSeatId++, x: leftX, y: sideStartY + i * sideSpacing,
@@ -1130,13 +779,11 @@ function initUShapeLayout() {
       state.seats.push({ id: state.nextSeatId++, x: rightX, y: sideStartY + i * sideSpacing,
         studentId: null, status: 'present', note: '', key: `u-right-${i}` });
     }
-    // 底部位置：兩側最下方座位的下緣 + 間距
     const sidesMaxY = Math.max(
       left > 0 ? sideStartY + (left - 1) * sideSpacing : sideStartY,
       right > 0 ? sideStartY + (right - 1) * sideSpacing : sideStartY
     );
     const bottomY = sidesMaxY + SEAT_H + gapToSide;
-    // 邊界保護：若超出範圍，往上靠
     const adjustedBottomY = Math.min(bottomY, AREA_H - SEAT_H - 4);
     for (let i = 0; i < bottom; i++) {
       state.seats.push({ id: state.nextSeatId++,
@@ -1144,7 +791,6 @@ function initUShapeLayout() {
         studentId: null, status: 'present', note: '', key: `u-bottom-${i}` });
     }
   } else {
-    // ㄇ 字：頂部接近講師，兩側從頂部下方延伸
     const topY = 30;
     for (let i = 0; i < bottom; i++) {
       state.seats.push({ id: state.nextSeatId++,
@@ -1171,7 +817,6 @@ function initCurrentLayout() {
   else if (state.layout === 'ushape') initUShapeLayout();
 }
 
-// ============ Lecture incremental: 加座位後重新置中該排 ============
 function lectureRecenterRow(rowIdx) {
   const rowSeats = state.seats.filter(s => s.key && s.key.startsWith(`lecture-r${rowIdx}-`));
   if (rowSeats.length === 0) return;
@@ -1180,9 +825,7 @@ function lectureRecenterRow(rowIdx) {
   const maxX = sorted[sorted.length - 1].x + SEAT_W;
   const rowCenter = (minX + maxX) / 2;
   const dx = PODIUM_CENTER_X - rowCenter;
-  if (Math.abs(dx) > 0.5) {
-    rowSeats.forEach(s => { s.x += dx; });
-  }
+  if (Math.abs(dx) > 0.5) rowSeats.forEach(s => { s.x += dx; });
 }
 
 function lectureAddSeatToRow(rowIdx) {
@@ -1199,7 +842,6 @@ function lectureAddSeatToRow(rowIdx) {
     key: `lecture-r${rowIdx}-c${newCol}`
   });
   state.rowCounts[rowIdx]++;
-  // 整排重新置中於講師區
   lectureRecenterRow(rowIdx);
 }
 
@@ -1209,7 +851,6 @@ function lectureRemoveSeatFromRow(rowIdx) {
   const sorted = [...rowSeats].sort((a, b) => b.x - a.x);
   state.seats = state.seats.filter(s => s.id !== sorted[0].id);
   state.rowCounts[rowIdx]--;
-  // 移除後也重新置中
   lectureRecenterRow(rowIdx);
 }
 
@@ -1223,9 +864,7 @@ function lectureAddRow() {
   const newY = maxY + 100;
   let spacingX = 110;
   if (state.rowCounts.length > 0) {
-    const firstRowSeats = state.seats
-      .filter(s => s.key && s.key.startsWith(`lecture-r0-`))
-      .sort((a, b) => a.x - b.x);
+    const firstRowSeats = state.seats.filter(s => s.key && s.key.startsWith(`lecture-r0-`)).sort((a, b) => a.x - b.x);
     if (firstRowSeats.length >= 2) spacingX = firstRowSeats[1].x - firstRowSeats[0].x;
   }
   const rowWidth = (cols - 1) * spacingX;
@@ -1256,9 +895,7 @@ function lectureRemoveRow(rowIdx) {
 function groupAddSeatToTable(tableIdx) {
   const newCount = state.tableCounts[tableIdx] + 1;
   state.tableCounts[tableIdx] = newCount;
-  const tableSeats = state.seats
-    .filter(s => s.key && s.key.startsWith(`table-t${tableIdx}-`))
-    .sort((a, b) => +a.key.split('-s')[1] - +b.key.split('-s')[1]);
+  const tableSeats = state.seats.filter(s => s.key && s.key.startsWith(`table-t${tableIdx}-`)).sort((a, b) => +a.key.split('-s')[1] - +b.key.split('-s')[1]);
   const assignments = tableSeats.map(s => ({ studentId: s.studentId, status: s.status, note: s.note }));
   state.seats = state.seats.filter(s => !(s.key && s.key.startsWith(`table-t${tableIdx}-`)));
   const tableInfo = state._tableLayout[tableIdx];
@@ -1286,12 +923,8 @@ function groupRemoveSeatFromTable(tableIdx) {
   if (state.tableCounts[tableIdx] <= 1) return;
   const newCount = state.tableCounts[tableIdx] - 1;
   state.tableCounts[tableIdx] = newCount;
-  const tableSeats = state.seats
-    .filter(s => s.key && s.key.startsWith(`table-t${tableIdx}-`))
-    .sort((a, b) => +a.key.split('-s')[1] - +b.key.split('-s')[1]);
-  const assignments = tableSeats.slice(0, newCount).map(s => ({
-    studentId: s.studentId, status: s.status, note: s.note
-  }));
+  const tableSeats = state.seats.filter(s => s.key && s.key.startsWith(`table-t${tableIdx}-`)).sort((a, b) => +a.key.split('-s')[1] - +b.key.split('-s')[1]);
+  const assignments = tableSeats.slice(0, newCount).map(s => ({ studentId: s.studentId, status: s.status, note: s.note }));
   state.seats = state.seats.filter(s => !(s.key && s.key.startsWith(`table-t${tableIdx}-`)));
   const tableInfo = state._tableLayout[tableIdx];
   if (!tableInfo) return;
@@ -1318,19 +951,15 @@ function groupAddTable() {
   state.tableCounts.push(6);
   const baseRadius = Math.min(AREA_W, AREA_H) * 0.18;
   let cx, cy;
-  if (state._tableLayout.length === 0) {
-    cx = PODIUM_CENTER_X; cy = AREA_H / 2;
-  } else {
+  if (state._tableLayout.length === 0) { cx = PODIUM_CENTER_X; cy = AREA_H / 2; }
+  else {
     const maxX = Math.max(...state._tableLayout.map(t => t.cx + t.r));
     const minX = Math.min(...state._tableLayout.map(t => t.cx - t.r));
     const maxY = Math.max(...state._tableLayout.map(t => t.cy + t.r));
     if (maxX + baseRadius * 2 + 80 < AREA_W) {
       cx = maxX + baseRadius + 40;
       cy = state._tableLayout[state._tableLayout.length - 1].cy;
-    } else {
-      cx = (minX + maxX) / 2;
-      cy = maxY + baseRadius + 40;
-    }
+    } else { cx = (minX + maxX) / 2; cy = maxY + baseRadius + 40; }
   }
   state._tableLayout.push({ cx, cy, r: baseRadius, label: '組 ' + (newTableIdx + 1), tableIndex: newTableIdx });
   const perTable = 6;
@@ -1355,28 +984,16 @@ function groupRemoveTable(tableIdx) {
     const m = s.key.match(/^table-t(\d+)-s(\d+)$/);
     if (m) {
       const t = +m[1], i = +m[2];
-      if (t > tableIdx) {
-        s.key = `table-t${t - 1}-s${i}`;
-        s.group = t;
-      }
+      if (t > tableIdx) { s.key = `table-t${t - 1}-s${i}`; s.group = t; }
     }
   });
-  state._tableLayout.forEach((t, i) => {
-    t.label = '組 ' + (i + 1);
-    t.tableIndex = i;
-  });
+  state._tableLayout.forEach((t, i) => { t.label = '組 ' + (i + 1); t.tableIndex = i; });
 }
 
 function uShapeAddSeat(side) {
-  const sideSeats = state.seats
-    .filter(s => s.key && s.key.startsWith(`u-${side}-`))
-    .sort((a, b) => +a.key.split('-')[2] - +b.key.split('-')[2]);
+  const sideSeats = state.seats.filter(s => s.key && s.key.startsWith(`u-${side}-`)).sort((a, b) => +a.key.split('-')[2] - +b.key.split('-')[2]);
   const newIdx = state.uShape[side];
-  if (sideSeats.length === 0) {
-    state.uShape[side]++;
-    initUShapeLayout();
-    return;
-  }
+  if (sideSeats.length === 0) { state.uShape[side]++; initUShapeLayout(); return; }
   let newX, newY;
   if (side === 'left' || side === 'right') {
     const spacing = sideSeats.length >= 2 ? sideSeats[1].y - sideSeats[0].y : 90;
@@ -1397,32 +1014,20 @@ function uShapeAddSeat(side) {
 
 function uShapeRemoveSeat(side) {
   if (state.uShape[side] === 0) return;
-  const sideSeats = state.seats
-    .filter(s => s.key && s.key.startsWith(`u-${side}-`))
-    .sort((a, b) => +a.key.split('-')[2] - +b.key.split('-')[2]);
+  const sideSeats = state.seats.filter(s => s.key && s.key.startsWith(`u-${side}-`)).sort((a, b) => +a.key.split('-')[2] - +b.key.split('-')[2]);
   if (sideSeats.length === 0) return;
   state.seats = state.seats.filter(s => s.id !== sideSeats[sideSeats.length - 1].id);
   state.uShape[side]--;
 }
 
-// ============ Layout switcher ============
 function setLayout(layout) {
   const prev = state.layout;
   state.layout = layout;
-  document.querySelectorAll('.layout-card').forEach(c => {
-    c.classList.toggle('active', c.dataset.layout === layout);
-  });
+  document.querySelectorAll('.layout-card').forEach(c => c.classList.toggle('active', c.dataset.layout === layout));
   clearSelection();
-  if (layout === 'free') {
-    renderLayoutConfig();
-    render();
-    return;
-  }
+  if (layout === 'free') { renderLayoutConfig(); render(); return; }
   if (prev !== layout) state.layoutInitialized[layout] = false;
-  if (!state.layoutInitialized[layout]) {
-    state.nextSeatId = 1;
-    initCurrentLayout();
-  }
+  if (!state.layoutInitialized[layout]) { state.nextSeatId = 1; initCurrentLayout(); }
   renderLayoutConfig();
   render();
 }
@@ -1432,16 +1037,12 @@ function renderLayoutConfig() {
   let html = '';
   if (state.layout === 'lecture') {
     html = `<div class="unit-list" id="rowList"></div>
-      <div class="unit-add-row">
-        <button class="btn btn-sm" onclick="onAddRow()">＋ 新增一排</button>
-      </div>
+      <div class="unit-add-row"><button class="btn btn-sm" onclick="onAddRow()">＋ 新增一排</button></div>
       <p class="help-text">每排可獨立增減；新增/減少時該排會自動以講師區為中心對齊</p>`;
   } else if (state.layout === 'group') {
     html = `<div class="unit-list" id="tableList"></div>
-      <div class="unit-add-row">
-        <button class="btn btn-sm" onclick="onAddTable()">＋ 新增一桌</button>
-      </div>
-      <p class="help-text">每桌可獨立調整，不影響其他桌</p>`;
+      <div class="unit-add-row"><button class="btn btn-sm" onclick="onAddTable()">＋ 新增一桌</button></div>
+      <p class="help-text">每桌可獨立調整</p>`;
   } else if (state.layout === 'ushape') {
     html = `
       <div class="dir-toggle">
@@ -1449,13 +1050,10 @@ function renderLayoutConfig() {
         <button class="${state.uShape.orientation === 'n' ? 'active' : ''}" onclick="setUOrientation('n')">ㄇ 字（開口朝下）</button>
       </div>
       <div class="unit-list" id="uList"></div>
-      <p class="help-text">${state.uShape.orientation === 'u' ? '開口面向講師' : '頂部接近講師'}；底部緊貼兩側座位下方</p>
-    `;
+      <p class="help-text">${state.uShape.orientation === 'u' ? '開口面向講師' : '頂部接近講師'}</p>`;
   } else if (state.layout === 'free') {
-    html = `
-      <button class="btn btn-block btn-primary" onclick="addFreeSeat()">＋ 新增座位</button>
-      <p class="help-text">新座位整列以講師區為中心對齊；空白處可框選</p>
-    `;
+    html = `<button class="btn btn-block btn-primary" onclick="addFreeSeat()">＋ 新增座位</button>
+      <p class="help-text">新座位整列以講師區為中心對齊；空白處可框選</p>`;
   }
   wrap.innerHTML = html;
   renderUnitList();
@@ -1472,8 +1070,7 @@ function renderUnitList() {
         <span class="unit-count">${cnt}</span>
         <button class="unit-btn" onclick="onRowPlus(${i})">+</button>
         <button class="unit-btn danger" onclick="onRowRemove(${i})" title="刪除整排">×</button>
-      </div>
-    `).join('');
+      </div>`).join('');
   } else if (state.layout === 'group') {
     const list = document.getElementById('tableList');
     if (!list) return;
@@ -1484,8 +1081,7 @@ function renderUnitList() {
         <span class="unit-count">${cnt}</span>
         <button class="unit-btn" onclick="onTablePlus(${i})">+</button>
         <button class="unit-btn danger" onclick="onTableRemove(${i})" title="刪除整桌">×</button>
-      </div>
-    `).join('');
+      </div>`).join('');
   } else if (state.layout === 'ushape') {
     const list = document.getElementById('uList');
     if (!list) return;
@@ -1501,8 +1097,7 @@ function renderUnitList() {
         <button class="unit-btn" onclick="onUMinus('${side.key}')">−</button>
         <span class="unit-count">${state.uShape[side.key]}</span>
         <button class="unit-btn" onclick="onUPlus('${side.key}')">+</button>
-      </div>
-    `).join('');
+      </div>`).join('');
   }
 }
 
@@ -1510,9 +1105,7 @@ function onRowPlus(rowIdx) { lectureAddSeatToRow(rowIdx); render(); }
 function onRowMinus(rowIdx) {
   if (state.rowCounts[rowIdx] <= 0) return;
   lectureRemoveSeatFromRow(rowIdx);
-  if (state.rowCounts[rowIdx] === 0 && state.rowCounts.length > 1) {
-    lectureRemoveRow(rowIdx);
-  }
+  if (state.rowCounts[rowIdx] === 0 && state.rowCounts.length > 1) lectureRemoveRow(rowIdx);
   render();
 }
 function onAddRow() { lectureAddRow(); render(); }
@@ -1523,10 +1116,7 @@ function onRowRemove(rowIdx) {
 }
 function onTablePlus(tableIdx) { groupAddSeatToTable(tableIdx); render(); }
 function onTableMinus(tableIdx) { groupRemoveSeatFromTable(tableIdx); render(); }
-function onAddTable() {
-  if (state.tableCounts.length >= 9) { showToast('最多 9 桌'); return; }
-  groupAddTable(); render();
-}
+function onAddTable() { if (state.tableCounts.length >= 9) { showToast('最多 9 桌'); return; } groupAddTable(); render(); }
 function onTableRemove(tableIdx) {
   if (state.tableCounts.length <= 1) { showToast('至少需保留一桌'); return; }
   if (!confirm(`確定要刪除第 ${tableIdx + 1} 桌嗎？`)) return;
@@ -1534,7 +1124,6 @@ function onTableRemove(tableIdx) {
 }
 function onUPlus(side) { if (state.uShape[side] >= 15) return; uShapeAddSeat(side); render(); }
 function onUMinus(side) { uShapeRemoveSeat(side); render(); }
-
 function setUOrientation(orient) {
   state.uShape.orientation = orient;
   state.nextSeatId = 1;
@@ -1543,7 +1132,6 @@ function setUOrientation(orient) {
   render();
 }
 
-// ============ Free seat ============
 function addFreeSeat() {
   if (state.seats.length === 0) {
     let x = PODIUM_CENTER_X - SEAT_W / 2;
@@ -1565,10 +1153,8 @@ function addFreeSeat() {
   const sortedRow = [...lastRowSeats].sort((a, b) => a.x - b.x);
   let spacingX = 12 + SEAT_W;
   if (sortedRow.length >= 2) spacingX = sortedRow[1].x - sortedRow[0].x;
-
   let candidateX = sortedRow[sortedRow.length - 1].x + spacingX;
   let candidateY = maxY;
-
   if (candidateX + SEAT_W > AREA_W) {
     candidateY = maxY + SEAT_H + 12;
     if (candidateY + SEAT_H > AREA_H) {
@@ -1576,33 +1162,24 @@ function addFreeSeat() {
       candidateX = AREA_W - SEAT_W - 4;
       const overlap = state.seats.some(s => Math.abs(s.x - candidateX) < 4 && Math.abs(s.y - candidateY) < 4);
       if (overlap) candidateX -= SEAT_W + 12;
-    } else {
-      candidateX = PODIUM_CENTER_X - SEAT_W / 2;
-    }
+    } else { candidateX = PODIUM_CENTER_X - SEAT_W / 2; }
   }
-
   if (state.snapEnabled) {
     candidateX = Math.round(candidateX / state.gridSize) * state.gridSize;
     candidateY = Math.round(candidateY / state.gridSize) * state.gridSize;
   }
-
   state.seats.push({
-    id: state.nextSeatId++,
-    x: candidateX, y: candidateY,
+    id: state.nextSeatId++, x: candidateX, y: candidateY,
     studentId: null, status: 'present', note: '',
     key: `free-${state.nextSeatId}`
   });
-
-  // 將新座位所屬列整體重新置中
   const newRowSeats = state.seats.filter(s => Math.abs(s.y - candidateY) < SEAT_H / 2);
   if (newRowSeats.length > 0) {
     const minX = Math.min(...newRowSeats.map(s => s.x));
     const maxX = Math.max(...newRowSeats.map(s => s.x + SEAT_W));
     const rowCenter = (minX + maxX) / 2;
     let dx = PODIUM_CENTER_X - rowCenter;
-    if (state.snapEnabled) {
-      dx = Math.round(dx / state.gridSize) * state.gridSize;
-    }
+    if (state.snapEnabled) dx = Math.round(dx / state.gridSize) * state.gridSize;
     if (dx !== 0) {
       newRowSeats.forEach(s => {
         s.x += dx;
@@ -1610,11 +1187,9 @@ function addFreeSeat() {
       });
     }
   }
-
   render();
 }
 
-// ============ Direct seat deletion ============
 function deleteSeatDirectly(seatId) {
   const seat = state.seats.find(s => s.id === seatId);
   if (!seat) return;
@@ -1624,15 +1199,10 @@ function deleteSeatDirectly(seatId) {
       const rowIdx = +m[1];
       state.seats = state.seats.filter(s => s.id !== seatId);
       state.rowCounts[rowIdx]--;
-      const rowSeats = state.seats
-        .filter(s => s.key && s.key.startsWith(`lecture-r${rowIdx}-`))
-        .sort((a, b) => a.x - b.x);
+      const rowSeats = state.seats.filter(s => s.key && s.key.startsWith(`lecture-r${rowIdx}-`)).sort((a, b) => a.x - b.x);
       rowSeats.forEach((s, i) => { s.key = `lecture-r${rowIdx}-c${i}`; });
-      if (state.rowCounts[rowIdx] === 0 && state.rowCounts.length > 1) {
-        lectureRemoveRow(rowIdx);
-      } else {
-        lectureRecenterRow(rowIdx);
-      }
+      if (state.rowCounts[rowIdx] === 0 && state.rowCounts.length > 1) lectureRemoveRow(rowIdx);
+      else lectureRecenterRow(rowIdx);
       render(); return;
     }
   } else if (state.layout === 'group') {
@@ -1648,9 +1218,7 @@ function deleteSeatDirectly(seatId) {
       const side = m[1];
       state.seats = state.seats.filter(s => s.id !== seatId);
       state.uShape[side]--;
-      const sideSeats = state.seats
-        .filter(s => s.key && s.key.startsWith(`u-${side}-`))
-        .sort((a, b) => side === 'bottom' ? a.x - b.x : a.y - b.y);
+      const sideSeats = state.seats.filter(s => s.key && s.key.startsWith(`u-${side}-`)).sort((a, b) => side === 'bottom' ? a.x - b.x : a.y - b.y);
       sideSeats.forEach((s, i) => { s.key = `u-${side}-${i}`; });
       render(); return;
     }
@@ -1669,13 +1237,9 @@ function swapSeatContents(seatA, seatB) {
   seatB.note = tmp.note;
 }
 
-// ============ Multi-selection ============
 function toggleSeatSelection(seatId) {
-  if (state.selectedSeatIds.has(seatId)) {
-    state.selectedSeatIds.delete(seatId);
-  } else {
-    state.selectedSeatIds.add(seatId);
-  }
+  if (state.selectedSeatIds.has(seatId)) state.selectedSeatIds.delete(seatId);
+  else state.selectedSeatIds.add(seatId);
   updateMultiToolbar();
   render();
 }
@@ -1689,36 +1253,28 @@ function clearSelection() {
 function updateMultiToolbar() {
   const toolbar = document.getElementById('multiToolbar');
   const count = state.selectedSeatIds.size;
-  if (count > 0) {
-    toolbar.classList.add('show');
-    document.getElementById('multiCount').textContent = count;
-  } else {
-    toolbar.classList.remove('show');
-  }
+  if (count > 0) { toolbar.classList.add('show'); document.getElementById('multiCount').textContent = count; }
+  else toolbar.classList.remove('show');
 }
 
 function deleteSelected() {
   if (state.selectedSeatIds.size === 0) return;
   if (!confirm(`確定要刪除已選取的 ${state.selectedSeatIds.size} 個座位嗎？`)) return;
-  // 逐個刪除（會自動處理各模式的 key 與計數）
   const ids = [...state.selectedSeatIds];
   ids.forEach(id => deleteSeatDirectly(id));
   state.selectedSeatIds.clear();
   updateMultiToolbar();
 }
 
-// ============ Toggles ============
 function toggleSnap() { state.snapEnabled = !state.snapEnabled; document.getElementById('snapToggle').classList.toggle('on', state.snapEnabled); }
 function toggleGuide() { state.guideEnabled = !state.guideEnabled; document.getElementById('guideToggle').classList.toggle('on', state.guideEnabled); }
 function toggleSpacing() { state.spacingEnabled = !state.spacingEnabled; document.getElementById('spacingToggle').classList.toggle('on', state.spacingEnabled); }
 function toggleGrid() { state.gridVisible = !state.gridVisible; document.getElementById('gridToggle').classList.toggle('on', state.gridVisible); applyGridVisibility(); }
-
 function applyGridVisibility() {
   const area = document.getElementById('layoutArea');
   area.classList.toggle('show-grid', state.layout === 'free' && state.gridVisible);
 }
 
-// ============ Render ============
 function render() {
   renderRoster();
   renderSeats();
@@ -1748,13 +1304,11 @@ function renderRoster() {
   }
   const placedIds = new Set(state.seats.filter(s => s.studentId).map(s => s.studentId));
   list.innerHTML = state.students.map(s => `
-    <li class="roster-item ${placedIds.has(s.id) ? 'placed' : ''}"
-        draggable="true" data-student-id="${s.id}">
+    <li class="roster-item ${placedIds.has(s.id) ? 'placed' : ''}" draggable="true" data-student-id="${s.id}">
       <span class="gender-badge ${s.gender}" data-cycle-gender="${s.id}" title="點擊切換性別">${GENDER_ICON[s.gender]}</span>
       <span class="roster-name" data-edit-student="${s.id}" title="點擊編輯">${escapeHtml(s.name)}</span>
       <button class="roster-remove" onclick="removeStudent(${s.id})">×</button>
-    </li>
-  `).join('');
+    </li>`).join('');
 
   list.querySelectorAll('.roster-item').forEach(item => {
     item.addEventListener('dragstart', e => {
@@ -1769,18 +1323,12 @@ function renderRoster() {
   });
 
   list.querySelectorAll('[data-cycle-gender]').forEach(badge => {
-    badge.addEventListener('click', e => {
-      e.stopPropagation();
-      cycleStudentGender(+badge.dataset.cycleGender);
-    });
+    badge.addEventListener('click', e => { e.stopPropagation(); cycleStudentGender(+badge.dataset.cycleGender); });
     badge.addEventListener('mousedown', e => e.stopPropagation());
   });
 
   list.querySelectorAll('[data-edit-student]').forEach(name => {
-    name.addEventListener('click', e => {
-      e.stopPropagation();
-      openStudentModal(+name.dataset.editStudent);
-    });
+    name.addEventListener('click', e => { e.stopPropagation(); openStudentModal(+name.dataset.editStudent); });
     name.addEventListener('mousedown', e => e.stopPropagation());
   });
 }
@@ -1797,7 +1345,6 @@ function renderSeats() {
   const area = document.getElementById('layoutArea');
   area.innerHTML = '';
 
-  // Selection box
   const selBox = document.createElement('div');
   selBox.className = 'selection-box';
   selBox.id = 'selectionBox';
@@ -1874,37 +1421,27 @@ function renderSeats() {
     });
 
     attachUnifiedDrag(div, seat, area);
-
     area.appendChild(div);
   });
 
-  // 設定 area 的框選 & 點空白處取消選取
   setupAreaInteractions(area);
 }
 
-// ============ Area interactions: 框選、點空白取消 ============
 function setupAreaInteractions(area) {
   let isBoxSelecting = false;
   let boxStartX = 0, boxStartY = 0;
-  let mouseDownTarget = null;
 
   area.onmousedown = e => {
     if (e.button !== 0) return;
-    // 只處理「點擊在 area 本身或在 selection-box 上」的情況（避免座位點擊也觸發）
     if (e.target.closest('.seat')) return;
     if (e.target.closest('.round-table')) return;
 
-    mouseDownTarget = e.target;
     const areaRect = area.getBoundingClientRect();
     boxStartX = e.clientX - areaRect.left;
     boxStartY = e.clientY - areaRect.top;
 
-    // 只有自由配置才啟用框選；其他模式只在空白處點擊取消選取
     if (state.layout !== 'free') {
-      // 若有選取，點空白處取消
-      if (state.selectedSeatIds.size > 0 && !e.ctrlKey && !e.metaKey) {
-        clearSelection();
-      }
+      if (state.selectedSeatIds.size > 0 && !e.ctrlKey && !e.metaKey) clearSelection();
       return;
     }
 
@@ -1940,14 +1477,10 @@ function setupAreaInteractions(area) {
       box.classList.remove('show');
 
       if (!hasMoved) {
-        // 沒拖動 → 點空白處取消選取
-        if (state.selectedSeatIds.size > 0 && !ev.ctrlKey && !ev.metaKey) {
-          clearSelection();
-        }
+        if (state.selectedSeatIds.size > 0 && !ev.ctrlKey && !ev.metaKey) clearSelection();
         return;
       }
 
-      // 計算框選範圍內的座位
       const finalX = ev.clientX - areaRect.left;
       const finalY = ev.clientY - areaRect.top;
       const bx1 = Math.min(boxStartX, finalX);
@@ -1959,11 +1492,8 @@ function setupAreaInteractions(area) {
       if (!additive) state.selectedSeatIds.clear();
 
       state.seats.forEach(s => {
-        const sx1 = s.x;
-        const sy1 = s.y;
-        const sx2 = s.x + SEAT_W;
-        const sy2 = s.y + SEAT_H;
-        // 與框框相交即選取
+        const sx1 = s.x, sy1 = s.y;
+        const sx2 = s.x + SEAT_W, sy2 = s.y + SEAT_H;
         if (sx2 >= bx1 && sx1 <= bx2 && sy2 >= by1 && sy1 <= by2) {
           state.selectedSeatIds.add(s.id);
         }
@@ -1979,14 +1509,113 @@ function setupAreaInteractions(area) {
   };
 }
 
-// ============ Unified drag (支援單一/多選整組拖動 + 對齊 + 互換) ============
+// ============ 多選整組對齊偵測 ============
+// 計算整組的「邊緣」與其他非選取座位的邊緣對齊
+function applyGroupAlignmentSnap(groupSeats, others, dxApplied, dyApplied, groupStartPositions) {
+  if (others.length === 0) return { dxFinal: dxApplied, dyFinal: dyApplied, guides: [] };
+
+  const threshold = state.snapThreshold;
+  // 計算群組移動後的「邊緣」：使用群組整體的 boundingBox
+  const movedGroupBox = {
+    left: Math.min(...groupSeats.map(s => {
+      const init = groupStartPositions.find(p => p.id === s.id);
+      return init.x + dxApplied;
+    })),
+    right: Math.max(...groupSeats.map(s => {
+      const init = groupStartPositions.find(p => p.id === s.id);
+      return init.x + dxApplied + SEAT_W;
+    })),
+    top: Math.min(...groupSeats.map(s => {
+      const init = groupStartPositions.find(p => p.id === s.id);
+      return init.y + dyApplied;
+    })),
+    bottom: Math.max(...groupSeats.map(s => {
+      const init = groupStartPositions.find(p => p.id === s.id);
+      return init.y + dyApplied + SEAT_H;
+    }))
+  };
+  movedGroupBox.centerX = (movedGroupBox.left + movedGroupBox.right) / 2;
+  movedGroupBox.centerY = (movedGroupBox.top + movedGroupBox.bottom) / 2;
+
+  // X 軸對齊：群組的 left/right/centerX 對其他座位的 left/right/centerX
+  let bestX = null, bestXDist = threshold + 1;
+  others.forEach(s => {
+    const t = {
+      left: s.x, right: s.x + SEAT_W, centerX: s.x + SEAT_W / 2
+    };
+    const pairs = [
+      ['left', 'left', t.left - movedGroupBox.left],
+      ['right', 'right', t.right - movedGroupBox.right],
+      ['centerX', 'centerX', t.centerX - movedGroupBox.centerX],
+      ['left', 'right', t.right - movedGroupBox.left],
+      ['right', 'left', t.left - movedGroupBox.right],
+    ];
+    pairs.forEach(([m, tk, deltaX]) => {
+      const dist = Math.abs(deltaX);
+      if (dist < bestXDist) {
+        bestXDist = dist;
+        bestX = { deltaX, guideX: t[tk], targetSeat: s };
+      }
+    });
+  });
+
+  // Y 軸對齊
+  let bestY = null, bestYDist = threshold + 1;
+  others.forEach(s => {
+    const t = {
+      top: s.y, bottom: s.y + SEAT_H, centerY: s.y + SEAT_H / 2
+    };
+    const pairs = [
+      ['top', 'top', t.top - movedGroupBox.top],
+      ['bottom', 'bottom', t.bottom - movedGroupBox.bottom],
+      ['centerY', 'centerY', t.centerY - movedGroupBox.centerY],
+      ['top', 'bottom', t.bottom - movedGroupBox.top],
+      ['bottom', 'top', t.top - movedGroupBox.bottom],
+    ];
+    pairs.forEach(([m, tk, deltaY]) => {
+      const dist = Math.abs(deltaY);
+      if (dist < bestYDist) {
+        bestYDist = dist;
+        bestY = { deltaY, guideY: t[tk], targetSeat: s };
+      }
+    });
+  });
+
+  let dxFinal = dxApplied;
+  let dyFinal = dyApplied;
+  const guides = [];
+
+  if (bestX) {
+    dxFinal = dxApplied + bestX.deltaX;
+    // 重新計算對齊後的 group box（讓 guide 線範圍涵蓋群組與目標）
+    const newGroupLeft = movedGroupBox.left + bestX.deltaX;
+    const newGroupRight = movedGroupBox.right + bestX.deltaX;
+    const newGroupTop = bestY ? movedGroupBox.top + bestY.deltaY : movedGroupBox.top;
+    const newGroupBottom = bestY ? movedGroupBox.bottom + bestY.deltaY : movedGroupBox.bottom;
+    const yStart = Math.min(newGroupTop, bestX.targetSeat.y);
+    const yEnd = Math.max(newGroupBottom, bestX.targetSeat.y + SEAT_H);
+    guides.push({ type: 'vertical', x: bestX.guideX, yStart, yEnd });
+  }
+  if (bestY) {
+    dyFinal = dyApplied + bestY.deltaY;
+    const newGroupLeft = bestX ? movedGroupBox.left + bestX.deltaX : movedGroupBox.left;
+    const newGroupRight = bestX ? movedGroupBox.right + bestX.deltaX : movedGroupBox.right;
+    const newGroupTop = movedGroupBox.top + bestY.deltaY;
+    const newGroupBottom = movedGroupBox.bottom + bestY.deltaY;
+    const xStart = Math.min(newGroupLeft, bestY.targetSeat.x);
+    const xEnd = Math.max(newGroupRight, bestY.targetSeat.x + SEAT_W);
+    guides.push({ type: 'horizontal', y: bestY.guideY, xStart, xEnd });
+  }
+
+  return { dxFinal, dyFinal, guides };
+}
+
 function attachUnifiedDrag(div, seat, area) {
   div.addEventListener('mousedown', e => {
     if (e.button !== 0) return;
     if (e.target.closest('.seat-quick-del')) return;
     if (e.target.closest('.seat-gender-icon')) return;
 
-    // Ctrl/Cmd + 點擊 = toggle 選取
     if (e.ctrlKey || e.metaKey) {
       e.preventDefault();
       e.stopPropagation();
@@ -2006,7 +1635,6 @@ function attachUnifiedDrag(div, seat, area) {
     let isFreeMode = state.layout === 'free';
     let currentSwapTarget = null;
 
-    // 多選整組拖動：如果此座位在選取集合中，則整組一起動
     const isInSelection = state.selectedSeatIds.has(seat.id);
     const groupSeats = isInSelection
       ? state.seats.filter(s => state.selectedSeatIds.has(s.id))
@@ -2036,7 +1664,7 @@ function attachUnifiedDrag(div, seat, area) {
       newX = Math.max(0, Math.min(area.clientWidth - SEAT_W, newX));
       newY = Math.max(0, Math.min(area.clientHeight - SEAT_H, newY));
 
-      // 偵測 swap target（僅在單一座位拖動時）
+      // 互換偵測（只有單一座位時）
       let targetSeat = null;
       let targetSeatEl = null;
       if (!isInSelection || groupSeats.length === 1) {
@@ -2045,7 +1673,6 @@ function attachUnifiedDrag(div, seat, area) {
         const targetSeatId = targetSeatEl && targetSeatEl !== div ? +targetSeatEl.dataset.seatId : null;
         targetSeat = targetSeatId ? state.seats.find(s => s.id === targetSeatId) : null;
       }
-
       if (currentSwapTarget && currentSwapTarget !== targetSeatEl) {
         currentSwapTarget.classList.remove('swap-target');
       }
@@ -2057,11 +1684,35 @@ function attachUnifiedDrag(div, seat, area) {
       }
 
       if (isFreeMode) {
-        // 自由模式：實際移動
         if (groupSeats.length > 1) {
-          // 整組拖動：計算位移差
-          const dxApply = newX - startSeatX;
-          const dyApply = newY - startSeatY;
+          // 多選整組拖動：套用對齊
+          let dxApply = newX - startSeatX;
+          let dyApply = newY - startSeatY;
+
+          const groupIds = new Set(groupSeats.map(s => s.id));
+          const others = state.seats.filter(s => !groupIds.has(s.id));
+
+          let guides = [];
+          if (state.guideEnabled && others.length > 0) {
+            const result = applyGroupAlignmentSnap(groupSeats, others, dxApply, dyApply, groupStartPositions);
+            dxApply = result.dxFinal;
+            dyApply = result.dyFinal;
+            guides = result.guides;
+          }
+          if (state.snapEnabled) {
+            // 群組吸附網格：以「拖動的那個座位」對齊到網格
+            const movingNewX = startSeatX + dxApply;
+            const movingNewY = startSeatY + dyApply;
+            if (guides.findIndex(g => g.type === 'vertical') < 0) {
+              const snapped = Math.round(movingNewX / state.gridSize) * state.gridSize;
+              dxApply = snapped - startSeatX;
+            }
+            if (guides.findIndex(g => g.type === 'horizontal') < 0) {
+              const snapped = Math.round(movingNewY / state.gridSize) * state.gridSize;
+              dyApply = snapped - startSeatY;
+            }
+          }
+
           groupSeats.forEach(s => {
             const init = groupStartPositions.find(p => p.id === s.id);
             s.x = init.x + dxApply;
@@ -2074,14 +1725,13 @@ function attachUnifiedDrag(div, seat, area) {
               el.style.top = s.y + 'px';
             }
           });
-          clearGuides();
+          renderGuides(guides);
           clearSpacing();
         } else {
-          // 單一座位：套用對齊與等距提示
+          // 單一座位
           const others = state.seats.filter(s => s.id !== seat.id);
           let snappedX = newX, snappedY = newY;
           let activeGuides = [];
-
           if (state.guideEnabled && others.length > 0) {
             const result = applyAlignmentSnap(newX, newY, others);
             snappedX = result.x; snappedY = result.y;
@@ -2098,12 +1748,9 @@ function attachUnifiedDrag(div, seat, area) {
           renderGuides(activeGuides);
           if (state.spacingEnabled && others.length >= 2) {
             renderSpacing(detectEqualSpacing(seat, others));
-          } else {
-            clearSpacing();
-          }
+          } else { clearSpacing(); }
         }
       } else {
-        // 非自由模式：只是視覺移動，鬆開時還原或互換
         div.style.left = newX + 'px';
         div.style.top = newY + 'px';
       }
@@ -2121,19 +1768,13 @@ function attachUnifiedDrag(div, seat, area) {
       clearSpacing();
 
       if (!isDragging) {
-        // 點擊（沒拖動）→ 開啟詳細彈窗
-        // 若 ctrl/cmd 已在 mousedown 處理過，這裡不會到
-        // 若有選取且沒按 ctrl，點擊單一座位 = 取消其他選取，只留這個
-        if (state.selectedSeatIds.size > 0 && !state.selectedSeatIds.has(seat.id)) {
-          clearSelection();
-        }
+        if (state.selectedSeatIds.size > 0 && !state.selectedSeatIds.has(seat.id)) clearSelection();
         openSeatModal(seat.id);
         return;
       }
 
       if (currentSwapTarget) currentSwapTarget.classList.remove('swap-target');
 
-      // 單一座位 + 鬆開在另一座位上 → 互換
       if (groupSeats.length === 1) {
         const targetEl = document.elementFromPoint(ev.clientX, ev.clientY);
         const targetSeatEl = targetEl ? targetEl.closest('.seat') : null;
@@ -2141,9 +1782,7 @@ function attachUnifiedDrag(div, seat, area) {
         if (targetSeatId) {
           const targetSeat = state.seats.find(s => s.id === targetSeatId);
           if (targetSeat) {
-            if (isFreeMode) {
-              seat.x = startSeatX; seat.y = startSeatY;
-            }
+            if (isFreeMode) { seat.x = startSeatX; seat.y = startSeatY; }
             swapSeatContents(seat, targetSeat);
             render();
             return;
@@ -2151,13 +1790,8 @@ function attachUnifiedDrag(div, seat, area) {
         }
       }
 
-      if (isFreeMode) {
-        render();
-      } else {
-        // 非自由模式沒互換 → 還原
-        div.style.left = startSeatX + 'px';
-        div.style.top = startSeatY + 'px';
-      }
+      if (isFreeMode) render();
+      else { div.style.left = startSeatX + 'px'; div.style.top = startSeatY + 'px'; }
     };
 
     document.addEventListener('mousemove', move);
@@ -2180,21 +1814,14 @@ function attachUnifiedDrag(div, seat, area) {
   }
 }
 
-// ============ 對齊偵測 ============
 function applyAlignmentSnap(x, y, others) {
   const threshold = state.snapThreshold;
   const result = { x, y, guides: [] };
-  const moving = {
-    left: x, right: x + SEAT_W, centerX: x + SEAT_W / 2,
-    top: y, bottom: y + SEAT_H, centerY: y + SEAT_H / 2
-  };
+  const moving = { left: x, right: x + SEAT_W, centerX: x + SEAT_W / 2, top: y, bottom: y + SEAT_H, centerY: y + SEAT_H / 2 };
 
   let bestX = null, bestXDist = threshold + 1;
   others.forEach(s => {
-    const t = {
-      left: s.x, right: s.x + SEAT_W, centerX: s.x + SEAT_W / 2,
-      top: s.y, bottom: s.y + SEAT_H, centerY: s.y + SEAT_H / 2
-    };
+    const t = { left: s.x, right: s.x + SEAT_W, centerX: s.x + SEAT_W / 2, top: s.y, bottom: s.y + SEAT_H, centerY: s.y + SEAT_H / 2 };
     const xPairs = [
       ['left', 'left', t.left], ['right', 'right', t.right - SEAT_W],
       ['centerX', 'centerX', t.centerX - SEAT_W / 2],
@@ -2208,10 +1835,7 @@ function applyAlignmentSnap(x, y, others) {
 
   let bestY = null, bestYDist = threshold + 1;
   others.forEach(s => {
-    const t = {
-      left: s.x, right: s.x + SEAT_W, centerX: s.x + SEAT_W / 2,
-      top: s.y, bottom: s.y + SEAT_H, centerY: s.y + SEAT_H / 2
-    };
+    const t = { left: s.x, right: s.x + SEAT_W, centerX: s.x + SEAT_W / 2, top: s.y, bottom: s.y + SEAT_H, centerY: s.y + SEAT_H / 2 };
     const yPairs = [
       ['top', 'top', t.top], ['bottom', 'bottom', t.bottom - SEAT_H],
       ['centerY', 'centerY', t.centerY - SEAT_H / 2],
@@ -2232,10 +1856,7 @@ function applyAlignmentSnap(x, y, others) {
     );
     const movingSnappedY = bestY ? bestY.snapY : y;
     const allYs = alignedSeats.flatMap(s => [s.y, s.y + SEAT_H]).concat([movingSnappedY, movingSnappedY + SEAT_H]);
-    result.guides.push({
-      type: 'vertical', x: bestX.guideX,
-      yStart: Math.min(...allYs), yEnd: Math.max(...allYs)
-    });
+    result.guides.push({ type: 'vertical', x: bestX.guideX, yStart: Math.min(...allYs), yEnd: Math.max(...allYs) });
   }
   if (bestY) {
     result.y = bestY.snapY;
@@ -2246,10 +1867,7 @@ function applyAlignmentSnap(x, y, others) {
     );
     const movingSnappedX = bestX ? bestX.snapX : x;
     const allXs = alignedSeats.flatMap(s => [s.x, s.x + SEAT_W]).concat([movingSnappedX, movingSnappedX + SEAT_W]);
-    result.guides.push({
-      type: 'horizontal', y: bestY.guideY,
-      xStart: Math.min(...allXs), xEnd: Math.max(...allXs)
-    });
+    result.guides.push({ type: 'horizontal', y: bestY.guideY, xStart: Math.min(...allXs), xEnd: Math.max(...allXs) });
   }
   return result;
 }
@@ -2259,10 +1877,7 @@ function detectEqualSpacing(movingSeat, others) {
   const threshold = state.equalThreshold;
   const movingCenterX = movingSeat.x + SEAT_W / 2;
   const movingCenterY = movingSeat.y + SEAT_H / 2;
-
-  const horizontallyAligned = others.filter(s =>
-    Math.abs((s.y + SEAT_H / 2) - movingCenterY) < SEAT_H * 0.6
-  );
+  const horizontallyAligned = others.filter(s => Math.abs((s.y + SEAT_H / 2) - movingCenterY) < SEAT_H * 0.6);
   if (horizontallyAligned.length >= 2) {
     const leftOnes = horizontallyAligned.filter(s => s.x + SEAT_W <= movingSeat.x + 2);
     const rightOnes = horizontallyAligned.filter(s => s.x >= movingSeat.x + SEAT_W - 2);
@@ -2278,9 +1893,7 @@ function detectEqualSpacing(movingSeat, others) {
       }
     }
   }
-  const verticallyAligned = others.filter(s =>
-    Math.abs((s.x + SEAT_W / 2) - movingCenterX) < SEAT_W * 0.6
-  );
+  const verticallyAligned = others.filter(s => Math.abs((s.x + SEAT_W / 2) - movingCenterX) < SEAT_W * 0.6);
   if (verticallyAligned.length >= 2) {
     const aboveOnes = verticallyAligned.filter(s => s.y + SEAT_H <= movingSeat.y + 2);
     const belowOnes = verticallyAligned.filter(s => s.y >= movingSeat.y + SEAT_H - 2);
@@ -2340,7 +1953,6 @@ function renderSpacing(items) {
     const cap2 = wrap.querySelector('[data-cap="end"]');
     const label = wrap.querySelector('.spacing-label');
     wrap.classList.add('show');
-
     if (ind.type === 'horizontal') {
       wrap.style.left = ind.x1 + 'px';
       wrap.style.top = ind.y + 'px';
@@ -2380,7 +1992,6 @@ function renderStats() {
   document.getElementById('statAbsent').textContent = occupied.filter(s => s.status === 'absent').length;
 }
 
-// ============ Roster ============
 function switchRosterTab(tab) {
   state.rosterTab = tab;
   document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.tab === tab));
@@ -2396,15 +2007,66 @@ function addStudent() {
   render();
 }
 
+// ============ 批量輸入：解析個別性別標記 ============
+function parseBulkLine(line, defaultGender) {
+  // 支援格式：
+  //   王小明 男 / 王小明 女
+  //   王小明 M / 王小明 F
+  //   王小明 (男) / 王小明 (女) / 王小明 (M) / 王小明 (F)
+  //   王小明,男 / 王小明,M
+  //   男 王小明 / 女 王小明
+  //   沒有任何標記 → 用 defaultGender
+  let trimmed = line.trim();
+  if (!trimmed) return null;
+
+  // 把括號去掉
+  trimmed = trimmed.replace(/[（）()]/g, ' ');
+  // 把分隔符（逗號、頓號）統一轉成空白
+  trimmed = trimmed.replace(/[,，、]/g, ' ');
+  // 多個空白合併
+  trimmed = trimmed.replace(/\s+/g, ' ').trim();
+
+  const tokens = trimmed.split(' ');
+  let gender = defaultGender;
+  let nameTokens = [];
+
+  const isGenderToken = (t) => {
+    const lower = t.toLowerCase();
+    return ['男', '女', 'm', 'f', 'male', 'female', '未指定', 'u', 'unknown'].includes(lower);
+  };
+  const tokenToGender = (t) => {
+    const lower = t.toLowerCase();
+    if (lower === '男' || lower === 'm' || lower === 'male') return 'm';
+    if (lower === '女' || lower === 'f' || lower === 'female') return 'f';
+    if (lower === '未指定' || lower === 'u' || lower === 'unknown') return 'u';
+    return defaultGender;
+  };
+
+  tokens.forEach(tok => {
+    if (isGenderToken(tok)) gender = tokenToGender(tok);
+    else nameTokens.push(tok);
+  });
+
+  const name = nameTokens.join(' ').trim();
+  if (!name) return null;
+  return { name, gender };
+}
+
 function bulkAddStudents() {
   const text = document.getElementById('bulkInput').value;
   if (!text.trim()) return;
-  const names = text.split(/[\n,,、]/).map(n => n.trim()).filter(Boolean);
-  if (names.length === 0) return;
-  names.forEach(name => state.students.push({ id: state.nextStudentId++, name, gender: state.bulkGender }));
+  const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
+  let added = 0;
+  lines.forEach(line => {
+    const parsed = parseBulkLine(line, state.bulkGender);
+    if (parsed) {
+      state.students.push({ id: state.nextStudentId++, name: parsed.name, gender: parsed.gender });
+      added++;
+    }
+  });
   document.getElementById('bulkInput').value = '';
   render();
-  showToast(`已加入 ${names.length} 位學員`);
+  showToast(`已加入 ${added} 位學員`);
 }
 
 function removeStudent(id) {
@@ -2437,7 +2099,6 @@ function assignStudent(seatId, studentId) {
   render();
 }
 
-// ============ Student modal ============
 function openStudentModal(studentId) {
   const s = state.students.find(x => x.id === studentId);
   if (!s) return;
@@ -2479,12 +2140,12 @@ document.getElementById('studentModal').addEventListener('click', e => {
   if (e.target.id === 'studentModal') closeStudentModal();
 });
 
+// 學員編輯彈窗的 Enter（用 IME-safe 處理）
+safeEnterHandler(document.getElementById('studentNameInput'), saveStudentModal);
 document.getElementById('studentNameInput').addEventListener('keydown', e => {
-  if (e.key === 'Enter') saveStudentModal();
   if (e.key === 'Escape') closeStudentModal();
 });
 
-// ============ Seat modal ============
 function openSeatModal(seatId) {
   state.selectedSeatId = seatId;
   const seat = state.seats.find(s => s.id === seatId);
@@ -2493,9 +2154,7 @@ function openSeatModal(seatId) {
   document.getElementById('modalSeatId').textContent = 'SEAT · ' + String(idx + 1).padStart(3, '0');
 
   const select = document.getElementById('modalStudent');
-  const placedElsewhere = new Set(
-    state.seats.filter(s => s.id !== seatId && s.studentId).map(s => s.studentId)
-  );
+  const placedElsewhere = new Set(state.seats.filter(s => s.id !== seatId && s.studentId).map(s => s.studentId));
   select.innerHTML = '<option value="">— 空位 —</option>' +
     state.students.map(s => {
       const tag = placedElsewhere.has(s.id) ? ' (將從原座位移除)' : '';
@@ -2506,14 +2165,10 @@ function openSeatModal(seatId) {
   document.querySelectorAll('#statusGroup .radio-pill').forEach(p => {
     p.classList.toggle('active', p.dataset.status === seat.status);
   });
-
   document.getElementById('modalNote').value = seat.note || '';
   document.getElementById('modalNewName').value = '';
   document.getElementById('seatModal').classList.add('show');
-
-  setTimeout(() => {
-    if (!seat.studentId) document.getElementById('modalNewName').focus();
-  }, 100);
+  setTimeout(() => { if (!seat.studentId) document.getElementById('modalNewName').focus(); }, 100);
 }
 
 function quickAddAndAssign() {
@@ -2558,9 +2213,7 @@ function saveSeatModal() {
   if (studentId) {
     state.seats.forEach(s => { if (s.studentId === studentId && s.id !== seat.id) s.studentId = null; });
     seat.studentId = studentId;
-  } else {
-    seat.studentId = null;
-  }
+  } else { seat.studentId = null; }
   const activeStatus = document.querySelector('#statusGroup .radio-pill.active');
   seat.status = activeStatus ? activeStatus.dataset.status : 'present';
   seat.note = document.getElementById('modalNote').value.trim();
@@ -2583,32 +2236,28 @@ document.getElementById('seatModal').addEventListener('click', e => {
   if (e.target.id === 'seatModal') closeModal();
 });
 
+// 新增學員姓名（左側名單）：用 IME-safe Enter
+safeEnterHandler(document.getElementById('newName'), addStudent);
+
+// 座位彈窗的快速新增：用 IME-safe Enter
+safeEnterHandler(document.getElementById('modalNewName'), quickAddAndAssign);
+
 ['sessionTitle', 'sessionDate', 'sessionLocation'].forEach(id => {
   document.getElementById(id).addEventListener('input', renderStageMeta);
 });
 
 document.getElementById('sessionDate').valueAsDate = new Date();
 
-// ============ Keyboard shortcuts ============
 document.addEventListener('keydown', e => {
-  // 若使用者正在輸入框內，不攔截
   if (e.target.matches('input, textarea')) return;
-
   if (e.key === 'Escape') {
-    if (state.selectedSeatIds.size > 0) {
-      clearSelection();
-      e.preventDefault();
-    }
+    if (state.selectedSeatIds.size > 0) { clearSelection(); e.preventDefault(); }
   }
   if (e.key === 'Delete' || e.key === 'Backspace') {
-    if (state.selectedSeatIds.size > 0) {
-      deleteSelected();
-      e.preventDefault();
-    }
+    if (state.selectedSeatIds.size > 0) { deleteSelected(); e.preventDefault(); }
   }
 });
 
-// ============ Export ============
 async function exportPNG() {
   const stage = document.getElementById('stage');
   document.body.classList.add('exporting');
@@ -2619,11 +2268,8 @@ async function exportPNG() {
     link.href = canvas.toDataURL('image/png');
     link.click();
     showToast('已匯出 PNG');
-  } catch (err) {
-    alert('匯出失敗：' + err.message);
-  } finally {
-    document.body.classList.remove('exporting');
-  }
+  } catch (err) { alert('匯出失敗：' + err.message); }
+  finally { document.body.classList.remove('exporting'); }
 }
 
 async function exportPDF() {
@@ -2647,11 +2293,8 @@ async function exportPDF() {
     pdf.addImage(imgData, 'PNG', x, y, w, h);
     pdf.save(getFilename() + '.pdf');
     showToast('已匯出 PDF');
-  } catch (err) {
-    alert('匯出失敗：' + err.message);
-  } finally {
-    document.body.classList.remove('exporting');
-  }
+  } catch (err) { alert('匯出失敗：' + err.message); }
+  finally { document.body.classList.remove('exporting'); }
 }
 
 function getFilename() {
@@ -2660,7 +2303,6 @@ function getFilename() {
   return `${title}_${date}`.replace(/[\\/:*?"<>|]/g, '_');
 }
 
-// ============ Persistence ============
 function saveData() {
   localStorage.setItem('seatingChart', JSON.stringify(serializeState()));
   showToast('已儲存至瀏覽器');
@@ -2711,10 +2353,7 @@ function applyState(data) {
   if (data.sessionTitle) document.getElementById('sessionTitle').value = data.sessionTitle;
   if (data.sessionDate) document.getElementById('sessionDate').value = data.sessionDate;
   if (data.sessionLocation) document.getElementById('sessionLocation').value = data.sessionLocation;
-
-  document.querySelectorAll('.layout-card').forEach(c => {
-    c.classList.toggle('active', c.dataset.layout === state.layout);
-  });
+  document.querySelectorAll('.layout-card').forEach(c => c.classList.toggle('active', c.dataset.layout === state.layout));
   document.getElementById('snapToggle').classList.toggle('on', state.snapEnabled);
   document.getElementById('guideToggle').classList.toggle('on', state.guideEnabled);
   document.getElementById('spacingToggle').classList.toggle('on', state.spacingEnabled);
@@ -2764,9 +2403,7 @@ function clearAll() {
 }
 
 function escapeHtml(str) {
-  return String(str).replace(/[&<>"']/g, c => ({
-    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
-  }[c]));
+  return String(str).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 }
 
 function showToast(msg) {
