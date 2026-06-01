@@ -711,7 +711,7 @@ body {
           <div class="stage-meta" id="stageMeta">SEATING / PLAN</div>
         </div>
         <div class="podium-axis"></div>
-        <div class="podium" id="podium"><span id="podiumName">講師區</span></div>
+        <div class="podium" id="podium"><span id="podiumName">投影幕</span></div>
         <div class="layout-area" id="layoutArea"></div>
       </div>
     </section>
@@ -1587,7 +1587,7 @@ function renderLayoutConfig() {
   if (state.layout === 'lecture') {
     html = `<div class="unit-list" id="rowList"></div>
       <div class="unit-add-row"><button class="btn btn-sm" onclick="onAddRow()">＋ 新增一排</button></div>
-      <p class="help-text">每排可獨立增減；新增/減少時該排會自動以講師區為中心對齊</p>`;
+      <p class="help-text">每排可獨立增減；新增/減少時該排會自動以投影幕為中心對齊</p>`;
   } else if (state.layout === 'group') {
     html = `<div class="unit-list" id="tableList"></div>
       <div class="unit-add-row"><button class="btn btn-sm" onclick="onAddTable()">＋ 新增一桌</button></div>
@@ -1602,7 +1602,7 @@ function renderLayoutConfig() {
       <p class="help-text">${state.uShape.orientation === 'u' ? '開口面向講師' : '頂部接近講師'}</p>`;
   } else if (state.layout === 'free') {
     html = `<button class="btn btn-block btn-primary" onclick="addFreeSeat()">＋ 新增座位</button>
-      <p class="help-text">新座位整列以講師區為中心對齊；空白處可框選</p>`;
+      <p class="help-text">新座位整列以投影幕為中心對齊；空白處可框選</p>`;
   }
   wrap.innerHTML = html;
   renderUnitList();
@@ -1854,7 +1854,7 @@ function renderStageMeta() {
 
   // 講師台名稱：顯示講師姓名
   const podiumName = document.getElementById('podiumName');
-  if (podiumName) podiumName.textContent = state.lecturer || '講師區';
+  if (podiumName) podiumName.textContent = state.lecturer || '投影幕';
 
   // 標頭右側顯示講師與值班人員
   const staffEl = document.getElementById('stageStaffInfo');
@@ -2088,7 +2088,7 @@ function setupAreaInteractions(area) {
 // ============ 多選整組對齊偵測 ============
 // 計算整組的「邊緣」與其他非選取座位的邊緣對齊
 function applyGroupAlignmentSnap(groupSeats, others, dxApplied, dyApplied, groupStartPositions) {
-  if (others.length === 0) return { dxFinal: dxApplied, dyFinal: dyApplied, guides: [] };
+  // 注意：即使沒有其他座位(others 為空)，仍要做「講師區中軸對齊」，故不在此 early return
 
   const threshold = state.snapThreshold;
   // 計算群組移動後的「邊緣」：使用群組整體的 boundingBox
@@ -2324,7 +2324,7 @@ function attachUnifiedDrag(div, seat, area) {
 
           let guides = [];
           let groupSpacingIndicators = [];
-          if (others.length > 0 && (state.guideEnabled || state.spacingEnabled)) {
+          if (state.guideEnabled || state.spacingEnabled) {
             const result = applyGroupAlignmentSnap(groupSeats, others, dxApply, dyApply, groupStartPositions);
             // 只有開啟對齊線時才套用吸附位移
             if (state.guideEnabled) {
