@@ -110,6 +110,16 @@ body {
   display: inline-flex; align-items: center; gap: 6px; border-radius: 2px;
 }
 .btn:hover { background: var(--paper-shade); border-color: var(--accent-soft); }
+.btn:disabled { opacity: 0.38; cursor: not-allowed; }
+.btn:disabled:hover { background: var(--paper); border-color: var(--rule); }
+.btn-icon { font-size: 12px; padding: 8px 12px; }
+.btn-undo {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 7px 12px; font-size: 13px; font-weight: 500;
+}
+.btn-undo svg { flex-shrink: 0; }
+.btn-undo:not(:disabled):hover { background: var(--warm-soft); border-color: var(--warm); color: var(--accent-deep); }
+.btn-undo:not(:disabled):hover svg { stroke: var(--accent-deep); }
 .btn-primary { background: var(--accent); color: white; border-color: var(--accent); }
 .btn-primary:hover { background: var(--accent-deep); border-color: var(--accent-deep); }
 .btn-block { width: 100%; justify-content: center; }
@@ -549,6 +559,21 @@ body {
       <div class="combo-wrap" id="sessionLocationCombo" style="min-width:140px;"></div>
     </div>
     <div class="header-actions">
+      <button class="btn btn-undo" id="undoBtn" onclick="doUndo()" title="復原上一步動作 (Ctrl+Z)" disabled>
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="9 14 4 9 9 4"/>
+          <path d="M4 9h11a5 5 0 0 1 0 10h-1"/>
+        </svg>
+        <span>復原</span>
+      </button>
+      <button class="btn btn-undo" id="redoBtn" onclick="doRedo()" title="重做下一步動作 (Ctrl+Y)" disabled>
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="15 14 20 9 15 4"/>
+          <path d="M20 9H9a5 5 0 0 0 0 10h1"/>
+        </svg>
+        <span>重做</span>
+      </button>
+      <span style="width:1px;height:24px;background:var(--rule);margin:0 2px;"></span>
       <button class="btn" onclick="exportPNG()">匯出 PNG</button>
       <button class="btn btn-primary" onclick="exportPDF()">匯出 PDF</button>
     </div>
@@ -886,7 +911,7 @@ const state = {
   gridVisible: true,
   gridSize: 12,
   snapThreshold: 6,
-  equalThreshold: 4,
+  equalThreshold: 8,
   layoutInitialized: { lecture: false, group: false, ushape: false },
   // 課程資訊
   // 地點
@@ -908,6 +933,70 @@ const state = {
 
 const GENDER_ICON = { f: '♀', m: '♂', u: '·' };
 const GENDER_ORDER = ['f', 'm', 'u'];
+
+// ============ 復原／重做（Undo/Redo）歷史系統 ============
+let undoStack = [];
+let redoStack = [];
+let lastSnapshot = null;
+let isRestoring = false;        // 還原中，避免又記錄歷史
+let suppressHistory = false;    // 批次操作中，暫停記錄
+const MAX_HISTORY = 60;
+
+function snapshotString() {
+  return JSON.stringify(serializeState());
+}
+
+// 在 render 結尾呼叫：偵測狀態變化並記錄
+function commitHistory() {
+  if (isRestoring || suppressHistory) return;
+  const cur = snapshotString();
+  if (lastSnapshot === null) { lastSnapshot = cur; updateUndoRedoButtons(); return; }
+  if (cur === lastSnapshot) return;
+  undoStack.push(lastSnapshot);
+  if (undoStack.length > MAX_HISTORY) undoStack.shift();
+  redoStack = [];
+  lastSnapshot = cur;
+  updateUndoRedoButtons();
+}
+
+function doUndo() {
+  if (undoStack.length === 0) return;
+  redoStack.push(snapshotString());
+  const prev = undoStack.pop();
+  lastSnapshot = prev;
+  isRestoring = true;
+  applyState(JSON.parse(prev));
+  isRestoring = false;
+  updateUndoRedoButtons();
+  showToast('已復原上一步');
+}
+
+function doRedo() {
+  if (redoStack.length === 0) return;
+  undoStack.push(snapshotString());
+  const next = redoStack.pop();
+  lastSnapshot = next;
+  isRestoring = true;
+  applyState(JSON.parse(next));
+  isRestoring = false;
+  updateUndoRedoButtons();
+  showToast('已重做下一步');
+}
+
+function updateUndoRedoButtons() {
+  const u = document.getElementById('undoBtn');
+  const r = document.getElementById('redoBtn');
+  if (u) u.disabled = undoStack.length === 0;
+  if (r) r.disabled = redoStack.length === 0;
+}
+
+// 批次操作包裝：期間不記錄，結束後記一次
+function runBatch(fn) {
+  suppressHistory = true;
+  try { fn(); }
+  finally { suppressHistory = false; commitHistory(); }
+}
+
 
 // 預設下拉選單選項
 const DEFAULT_COURSE_NAMES = [
@@ -1721,9 +1810,11 @@ function deleteSelected() {
   if (state.selectedSeatIds.size === 0) return;
   if (!confirm(`確定要刪除已選取的 ${state.selectedSeatIds.size} 個座位嗎？`)) return;
   const ids = [...state.selectedSeatIds];
-  ids.forEach(id => deleteSeatDirectly(id));
-  state.selectedSeatIds.clear();
-  updateMultiToolbar();
+  runBatch(() => {
+    ids.forEach(id => deleteSeatDirectly(id));
+    state.selectedSeatIds.clear();
+    updateMultiToolbar();
+  });
 }
 
 function toggleSnap() { state.snapEnabled = !state.snapEnabled; document.getElementById('snapToggle').classList.toggle('on', state.snapEnabled); }
@@ -1743,6 +1834,7 @@ function render() {
   renderUnitList();
   applyGridVisibility();
   updateMultiToolbar();
+  commitHistory();
 }
 
 function renderStageMeta() {
@@ -2065,33 +2157,87 @@ function applyGroupAlignmentSnap(groupSeats, others, dxApplied, dyApplied, group
     });
   });
 
+  // 講師區中軸對齊：群組中心 X 接近講師區中軸時吸附
+  const groupCenterX = movedGroupBox.centerX;
+  const podiumDist = Math.abs(groupCenterX - PODIUM_CENTER_X);
+  if (podiumDist < threshold && (bestX === null || podiumDist <= bestXDist)) {
+    bestX = { deltaX: PODIUM_CENTER_X - groupCenterX, guideX: PODIUM_CENTER_X, targetSeat: null, isPodium: true };
+    bestXDist = podiumDist;
+  }
+
   let dxFinal = dxApplied;
   let dyFinal = dyApplied;
   const guides = [];
 
   if (bestX) {
     dxFinal = dxApplied + bestX.deltaX;
-    // 重新計算對齊後的 group box（讓 guide 線範圍涵蓋群組與目標）
-    const newGroupLeft = movedGroupBox.left + bestX.deltaX;
-    const newGroupRight = movedGroupBox.right + bestX.deltaX;
     const newGroupTop = bestY ? movedGroupBox.top + bestY.deltaY : movedGroupBox.top;
     const newGroupBottom = bestY ? movedGroupBox.bottom + bestY.deltaY : movedGroupBox.bottom;
-    const yStart = Math.min(newGroupTop, bestX.targetSeat.y);
-    const yEnd = Math.max(newGroupBottom, bestX.targetSeat.y + SEAT_H);
-    guides.push({ type: 'vertical', x: bestX.guideX, yStart, yEnd });
+    if (bestX.isPodium) {
+      guides.push({ type: 'vertical', x: PODIUM_CENTER_X, yStart: Math.min(0, newGroupTop), yEnd: Math.max(newGroupBottom, AREA_H * 0.5) });
+    } else {
+      const yStart = Math.min(newGroupTop, bestX.targetSeat.y);
+      const yEnd = Math.max(newGroupBottom, bestX.targetSeat.y + SEAT_H);
+      guides.push({ type: 'vertical', x: bestX.guideX, yStart, yEnd });
+    }
   }
   if (bestY) {
     dyFinal = dyApplied + bestY.deltaY;
     const newGroupLeft = bestX ? movedGroupBox.left + bestX.deltaX : movedGroupBox.left;
     const newGroupRight = bestX ? movedGroupBox.right + bestX.deltaX : movedGroupBox.right;
-    const newGroupTop = movedGroupBox.top + bestY.deltaY;
-    const newGroupBottom = movedGroupBox.bottom + bestY.deltaY;
     const xStart = Math.min(newGroupLeft, bestY.targetSeat.x);
     const xEnd = Math.max(newGroupRight, bestY.targetSeat.x + SEAT_W);
     guides.push({ type: 'horizontal', y: bestY.guideY, xStart, xEnd });
   }
 
-  return { dxFinal, dyFinal, guides };
+  // 群組等距偵測
+  const spacingIndicators = [];
+  if (state.spacingEnabled) {
+    const finalBox = {
+      left: movedGroupBox.left + (dxFinal - dxApplied),
+      right: movedGroupBox.right + (dxFinal - dxApplied),
+      top: movedGroupBox.top + (dyFinal - dyApplied),
+      bottom: movedGroupBox.bottom + (dyFinal - dyApplied),
+    };
+    finalBox.centerY = (finalBox.top + finalBox.bottom) / 2;
+    finalBox.centerX = (finalBox.left + finalBox.right) / 2;
+    const sameRow = others.filter(s => {
+      // 垂直方向與群組有重疊
+      return (s.y + SEAT_H) > finalBox.top && s.y < finalBox.bottom;
+    });
+    const leftOnes = sameRow.filter(s => s.x + SEAT_W <= finalBox.left + 2);
+    const rightOnes = sameRow.filter(s => s.x >= finalBox.right - 2);
+    if (leftOnes.length && rightOnes.length) {
+      const L = leftOnes.reduce((a, b) => b.x > a.x ? b : a);
+      const R = rightOnes.reduce((a, b) => b.x < a.x ? b : a);
+      const gapL = finalBox.left - (L.x + SEAT_W);
+      const gapR = R.x - finalBox.right;
+      if (Math.abs(gapL - gapR) < state.equalThreshold && gapL > 0 && gapR > 0) {
+        const y = finalBox.centerY;
+        spacingIndicators.push({ type: 'horizontal', x1: L.x + SEAT_W, x2: finalBox.left, y, gap: Math.round(gapL) });
+        spacingIndicators.push({ type: 'horizontal', x1: finalBox.right, x2: R.x, y, gap: Math.round(gapR) });
+      }
+    }
+    const sameCol = others.filter(s => {
+      // 水平方向與群組有重疊（座位的水平範圍與群組水平範圍交集）
+      return (s.x + SEAT_W) > finalBox.left && s.x < finalBox.right;
+    });
+    const aboveOnes = sameCol.filter(s => s.y + SEAT_H <= finalBox.top + 2);
+    const belowOnes = sameCol.filter(s => s.y >= finalBox.bottom - 2);
+    if (aboveOnes.length && belowOnes.length) {
+      const A = aboveOnes.reduce((a, b) => b.y > a.y ? b : a);
+      const B = belowOnes.reduce((a, b) => b.y < a.y ? b : a);
+      const gapA = finalBox.top - (A.y + SEAT_H);
+      const gapB = B.y - finalBox.bottom;
+      if (Math.abs(gapA - gapB) < state.equalThreshold && gapA > 0 && gapB > 0) {
+        const x = finalBox.centerX;
+        spacingIndicators.push({ type: 'vertical', y1: A.y + SEAT_H, y2: finalBox.top, x, gap: Math.round(gapA) });
+        spacingIndicators.push({ type: 'vertical', y1: finalBox.bottom, y2: B.y, x, gap: Math.round(gapB) });
+      }
+    }
+  }
+
+  return { dxFinal, dyFinal, guides, spacingIndicators };
 }
 
 function attachUnifiedDrag(div, seat, area) {
@@ -2177,11 +2323,16 @@ function attachUnifiedDrag(div, seat, area) {
           const others = state.seats.filter(s => !groupIds.has(s.id));
 
           let guides = [];
-          if (state.guideEnabled && others.length > 0) {
+          let groupSpacingIndicators = [];
+          if (others.length > 0 && (state.guideEnabled || state.spacingEnabled)) {
             const result = applyGroupAlignmentSnap(groupSeats, others, dxApply, dyApply, groupStartPositions);
-            dxApply = result.dxFinal;
-            dyApply = result.dyFinal;
-            guides = result.guides;
+            // 只有開啟對齊線時才套用吸附位移
+            if (state.guideEnabled) {
+              dxApply = result.dxFinal;
+              dyApply = result.dyFinal;
+              guides = result.guides;
+            }
+            groupSpacingIndicators = result.spacingIndicators || [];
           }
           if (state.snapEnabled) {
             // 群組吸附網格：以「拖動的那個座位」對齊到網格
@@ -2197,12 +2348,17 @@ function attachUnifiedDrag(div, seat, area) {
             }
           }
 
+          // 整體邊界限制：算出群組 bounding box，限制位移量讓整組不超界（避免疊在一起）
+          const gMinX = Math.min(...groupStartPositions.map(p => p.x));
+          const gMaxX = Math.max(...groupStartPositions.map(p => p.x + SEAT_W));
+          const gMinY = Math.min(...groupStartPositions.map(p => p.y));
+          const gMaxY = Math.max(...groupStartPositions.map(p => p.y + SEAT_H));
+          dxApply = Math.max(-gMinX, Math.min(AREA_W - gMaxX, dxApply));
+          dyApply = Math.max(-gMinY, Math.min(AREA_H - gMaxY, dyApply));
           groupSeats.forEach(s => {
             const init = groupStartPositions.find(p => p.id === s.id);
             s.x = init.x + dxApply;
             s.y = init.y + dyApply;
-            s.x = Math.max(0, Math.min(AREA_W - SEAT_W, s.x));
-            s.y = Math.max(0, Math.min(AREA_H - SEAT_H, s.y));
             const el = area.querySelector(`[data-seat-id="${s.id}"]`);
             if (el) {
               el.style.left = s.x + 'px';
@@ -2210,7 +2366,8 @@ function attachUnifiedDrag(div, seat, area) {
             }
           });
           renderGuides(guides);
-          clearSpacing();
+          if (state.spacingEnabled) renderSpacing(groupSpacingIndicators);
+          else clearSpacing();
         } else {
           // 單一座位
           const others = state.seats.filter(s => s.id !== seat.id);
@@ -2331,16 +2488,30 @@ function applyAlignmentSnap(x, y, others) {
     });
   });
 
+  // 講師區中軸對齊：座位中心 X 接近講師區中軸時吸附
+  const seatCenterX = x + SEAT_W / 2;
+  const podiumDist = Math.abs(seatCenterX - PODIUM_CENTER_X);
+  if (podiumDist < threshold && (bestX === null || podiumDist <= bestXDist)) {
+    bestX = { snapX: PODIUM_CENTER_X - SEAT_W / 2, guideX: PODIUM_CENTER_X, isPodium: true };
+    bestXDist = podiumDist;
+  }
+
   if (bestX) {
     result.x = bestX.snapX;
-    const alignedSeats = others.filter(s =>
-      Math.abs(s.x - bestX.guideX) < 0.5 ||
-      Math.abs(s.x + SEAT_W - bestX.guideX) < 0.5 ||
-      Math.abs(s.x + SEAT_W / 2 - bestX.guideX) < 0.5
-    );
-    const movingSnappedY = bestY ? bestY.snapY : y;
-    const allYs = alignedSeats.flatMap(s => [s.y, s.y + SEAT_H]).concat([movingSnappedY, movingSnappedY + SEAT_H]);
-    result.guides.push({ type: 'vertical', x: bestX.guideX, yStart: Math.min(...allYs), yEnd: Math.max(...allYs) });
+    if (bestX.isPodium) {
+      // 講師區中軸線：從講師區延伸到座位下方
+      const movingSnappedY = bestY ? bestY.snapY : y;
+      result.guides.push({ type: 'vertical', x: PODIUM_CENTER_X, yStart: Math.min(0, movingSnappedY), yEnd: Math.max(movingSnappedY + SEAT_H, AREA_H * 0.5) });
+    } else {
+      const alignedSeats = others.filter(s =>
+        Math.abs(s.x - bestX.guideX) < 0.5 ||
+        Math.abs(s.x + SEAT_W - bestX.guideX) < 0.5 ||
+        Math.abs(s.x + SEAT_W / 2 - bestX.guideX) < 0.5
+      );
+      const movingSnappedY = bestY ? bestY.snapY : y;
+      const allYs = alignedSeats.flatMap(s => [s.y, s.y + SEAT_H]).concat([movingSnappedY, movingSnappedY + SEAT_H]);
+      result.guides.push({ type: 'vertical', x: bestX.guideX, yStart: Math.min(...allYs), yEnd: Math.max(...allYs) });
+    }
   }
   if (bestY) {
     result.y = bestY.snapY;
@@ -2733,7 +2904,14 @@ document.getElementById('sessionDate').addEventListener('input', renderStageMeta
 document.getElementById('sessionDate').valueAsDate = new Date();
 
 document.addEventListener('keydown', e => {
-  if (e.target.matches('input, textarea')) return;
+  // Undo/Redo 快捷鍵（即使在輸入框也允許，但輸入框內的文字復原交給瀏覽器，故排除）
+  const inField = e.target.matches('input, textarea');
+  if ((e.ctrlKey || e.metaKey) && !inField) {
+    const key = e.key.toLowerCase();
+    if (key === 'z' && !e.shiftKey) { doUndo(); e.preventDefault(); return; }
+    if (key === 'y' || (key === 'z' && e.shiftKey)) { doRedo(); e.preventDefault(); return; }
+  }
+  if (inField) return;
   if (e.key === 'Escape') {
     if (state.selectedSeatIds.size > 0) { clearSelection(); e.preventDefault(); }
   }
