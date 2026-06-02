@@ -1226,6 +1226,13 @@ function createCombo(wrapId, defaultOptions, customKey, currentValue, onChange, 
     safeEnterHandler(addInput, handleAdd);
     addInput.addEventListener('mousedown', e => e.stopPropagation());
     addInput.addEventListener('click', e => e.stopPropagation());
+    // 監聽新增輸入框失焦
+    addInput.addEventListener('blur', () => setTimeout(() => {
+      const active = document.activeElement;
+      if (active && wrap.contains(active)) return;
+      closeDropdown();
+      if (editMode) { editMode = false; }
+    }, 200));
   }
 
   function openDropdown() { renderDropdown(); dropdown.classList.add('show'); }
@@ -1242,6 +1249,9 @@ function createCombo(wrapId, defaultOptions, customKey, currentValue, onChange, 
     adjustComboWidth(input, minW, maxW);
   });
   input.addEventListener('blur', () => setTimeout(() => {
+    // 若焦點移到下拉選單內部（例如點了「新增選項」輸入框），不關閉
+    const active = document.activeElement;
+    if (active && wrap.contains(active)) return;
     closeDropdown();
     if (editMode) { editMode = false; }
   }, 200));
@@ -3422,6 +3432,32 @@ async function exportCaseReport() {
 
     // 分隔段落
     const spacer = new Paragraph({ spacing: { before: 200, after: 100 }, children: [] });
+
+    // 表頭儲存格
+    const headerCell = (text, widthPct) => new TableCell({
+      width: { size: widthPct, type: WidthType.PERCENTAGE },
+      shading: headerShading,
+      borders: borderStyle,
+      children: [new Paragraph({
+        alignment: AlignmentType.CENTER,
+        spacing: { before: 60, after: 60 },
+        children: [new TextRun({ text: text, bold: true, size: 22, color: 'FFFFFF', font: '標楷體' })]
+      })]
+    });
+
+    // 資料儲存格
+    const dataCell = (text, widthPct, isAlt, alignCenter) => new TableCell({
+      width: { size: widthPct, type: WidthType.PERCENTAGE },
+      shading: isAlt ? altShading : undefined,
+      borders: borderStyle,
+      children: [new Paragraph({
+        alignment: alignCenter ? AlignmentType.CENTER : AlignmentType.LEFT,
+        spacing: { before: 50, after: 50 },
+        children: (text || '').split('\n').map((line, i) => new TextRun({
+          text: line, break: i > 0 ? 1 : 0, size: 20, color: INK, font: '標楷體'
+        }))
+      })]
+    });
 
     const tableTitle = new Paragraph({
       spacing: { before: 200, after: 120 },
